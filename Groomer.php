@@ -73,7 +73,7 @@ class Groomer
     private $developer         = 'Caasi';
     private $developer_url         = 'www.caasi.co.zw';
     protected $db;
-    protected $title = false;
+    protected $title;
     protected $keywords = array();
     protected $details;
     protected $appname;
@@ -87,7 +87,6 @@ class Groomer
     protected $language ='en-ZW';
     protected $tw_card ='summary_large_image';
     protected $triggers = array();
-    protected $schema;
     /**
      * Accepts an array with the following structure
      * @var array
@@ -121,31 +120,27 @@ class Groomer
     /**
      * Returns a well formated page title
      */
-    public function getTitle()
+    protected function getTitle()
     {
-        if($this->title){
+        if(!IS_WORDPRESS){
             return $this->title . " " . html_entity_decode("&ndash;") . " " . $this->appname;
+        } else {
+            return wp_title('&raquo;',false,'right') .  $this->appname;
         }
-        return wp_title('&raquo;',false);
+        return null;
     }
     protected function getDetails()
     {
-        if(!empty($this->details)){
-            return $this->details;
-        }
         if(IS_WORDPRESS){
-            if(!empty(get_the_excerpt())){
-                return get_the_excerpt();
-            }
-            return get_bloginfo('description');
+            return empty($this->details)? get_the_excerpt():$this->details;
         }
-        return $this->getTitle();
+        return $this->details;
     }
     protected function getAuthor()
     {
         return $this->author;
     }
-    public function getFavicon()
+    protected function getFavicon()
     {
         return $this->favicon;
     }
@@ -223,6 +218,7 @@ class Groomer
             '/}[\r\n\t ]+/s',
             '/([\t ])+/s',
             '/\>[\r\n\t ]+\</s',
+            "/\n/",
         );
         $replace = array(
             '>',
@@ -235,6 +231,7 @@ class Groomer
             '{',
             ' ',
             '><',
+            ' ',
         );
         $buffer = preg_replace($search, $replace, $buffer);
         return $buffer;
@@ -246,6 +243,9 @@ class Groomer
             defined( 'ABSPATH' ) || exit;
             $this->theme = wp_get_theme();
             $this->appname = get_bloginfo('name');
+            if(get_bloginfo('description')){
+                $this->details = get_bloginfo('description');
+            }
             $this->text_dir = is_rtl()?'rtl':'ltr';
             $this->charset = get_bloginfo('charset');
             $this->version = $this->theme->get('Version');
@@ -362,11 +362,6 @@ class Groomer
         $this->title = $title;
         return $this;
     }
-    public function setSchema($schema)
-    {
-        $this->schema = $schema;
-        return $this;
-    }
     public function setDatabase(&$db)
     {
         $this->db = $db;
@@ -401,7 +396,7 @@ class Groomer
         $this->details = $excerpt;
         return $this;
     }
-    public function setDetails(string &$excerpt)
+    public function setDetails(string $excerpt)
     {
         $this->details = $excerpt;
         return $this;
@@ -504,7 +499,7 @@ class Groomer
             } else {
                 $scr =  "<script src=\"{$script['src']}";
                 if ((isset($script['control_version']) && $script['control_version']) || !isset($script['control_version'])) {
-                    $scr .= "?ver={$this->version}";
+                    $scr .= sprintf("?ver=%s",$script['version']??$this->version);
                 }
                 $scr .= "\" type=\"text/javascript\"";
                 if ((isset($script['async']) && $script['async']) || !isset($script['async'])) {
@@ -550,7 +545,7 @@ class Groomer
                     $css .= sprintf("rel=\"stylesheet\" type=\"text/css\"  href=\"%s",$style['href'],$this->version);
                 endif;
                 if($version):
-                    $css .= sprintf("?ver=%s\" ",$this->version);
+                    $css .= sprintf("?ver=%s\" ",$style['version']??$this->version);
                 else:
                     $css .= sprintf("\" ");
                 endif;
@@ -587,9 +582,7 @@ class Groomer
             $this->title = $title;
         }
         if(IS_WORDPRESS){ 
-            if(empty($this->title)){
-                $this->title = get_the_title();
-            }
+            $this->title = get_the_title();
             $this->setKeywords(
                 array(
                     $this->getTitle(),
@@ -674,12 +667,9 @@ class Groomer
                 });
                 wp_head();
             endif;
-            if($this->title):
+            if($this->title && !IS_WORDPRESS):
                 @define('PG_TITLE', $this->getTitle());
                 printf("<title>%s</title>", $this->getTitle());
-            endif;
-            if($this->schema):
-                print($this->getSchema());
             endif;
             if ($this->style):
                 printf("<style type=\"text/css\">%s</style>", $this->style);
@@ -694,9 +684,6 @@ class Groomer
     {
         $this->getHead($title,$cb);
         return $this;
-    }
-    public function getSchema(){
-        return sprintf("<script type=\"application/ld+json\" id=\"csg-schema-seo\">%s</script>",$this->schema);
     }
     function openBody($args=null,$class=null){
         if($this->body_open){

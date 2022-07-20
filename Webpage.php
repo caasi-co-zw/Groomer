@@ -2,13 +2,8 @@
 
 namespace Caasi\Groomer;
 
-if(class_exists('WP') && function_exists('wp_enqueue_script')):
-    include get_template_directory() . '/inc/Groomer/Groomer.php';
-    include get_template_directory() . '/inc/Groomer/NavWalkerBootstrap.php';
-else:
-    include __DIR__ . '/Groomer.php';
-    include __DIR__ . '/NavWalkerBootstrap.php';
-endif;
+include __DIR__ . '/Groomer.php';
+include __DIR__ . '/NavWalkerBootstrap.php';
 
 class Webpage extends Groomer
 {
@@ -80,8 +75,8 @@ class Webpage extends Groomer
         <header class="border-bottom white">
             <div class="container text-center py-2">
                 <img src="<?=site_icon_url()?>" alt="Site Icon" class="p-2 mt-3" width="150">
-                <h1 class="h2 mb-0 heading"><?=$this->sitename?></h1>
-                <p class="mt-0 mb-1 heading"><?=bloginfo('description')?></p>
+                <h1 class="h2 mb-0"><?=$this->sitename?></h1>
+                <p class="my-0"><?=bloginfo('description')?></p>
                 <ul class="list-inline">
                     <li class="list-inline-item px-1">
                         <a href="//fb.me/ndaramahigh" target="_blank" rel="noopener noreferrer">
@@ -120,7 +115,7 @@ class Webpage extends Groomer
         <nav class="navbar navbar-expand-xl navbar-light white z-depth-0 py-lg-3 border-bottom<?= $nav_class ?>">
             <div class="container-fluid justify-content-center px-lg-4">
                 <button class="navbar-toggler d-xl-none py-2 border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#collar" aria-controls="collar" aria-expanded="false" aria-label="Toggle navigation">
-                    MENU
+                    <i class="fa fa-chevron-down d-print-none" aria-hidden="true"></i> <span class="d-none d-print-block">MENU</span>
                 </button>
                 <?php
                 wp_nav_menu(
