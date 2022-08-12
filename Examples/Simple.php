@@ -2,8 +2,7 @@
 
 namespace Caasi\Groomer;
 
-include __DIR__ . '/Groomer.php';
-include __DIR__ . '/NavWalkerBootstrap.php';
+include __DIR__ . '/autoload.php';
 
 class Webpage extends Groomer
 {
@@ -13,23 +12,25 @@ class Webpage extends Groomer
      */
     public function __construct($config = [], $cb = null)
     {
-        $this->default_styles = array(
-            [
-                'src' => '/css/fas/css/all.css',
-                'name' => 'fas'
-            ],
-            [
-                'src' => '/css/bootstrap.css',
-                'name' => 'tbs'
-            ],
-            [
-                'src' => '/css/mdb/mdb.min.css',
-                'name' => 'mdb'
-            ],
-            [
-                'src' => '/css/style.min.css',
-                'name' => 'cs'
-            ],
+        $this->setStyles(
+            array(
+                [
+                    'src' => '/css/fas/css/all.css',
+                    'name' => 'fas'
+                ],
+                [
+                    'src' => '/css/bootstrap.css',
+                    'name' => 'tbs'
+                ],
+                [
+                    'src' => '/css/mdb/mdb.min.css',
+                    'name' => 'mdb'
+                ],
+                [
+                    'src' => '/css/style.min.css',
+                    'name' => 'cs'
+                ],
+            )
         );
         $this->default_scripts = array(
             [
@@ -71,48 +72,14 @@ class Webpage extends Groomer
     }
     public function getHeader()
     {
-        parent::beforeGetHeader(); ?>
-        <header class="border-bottom white">
-            <div class="container text-center py-2">
-                <img src="<?=site_icon_url()?>" alt="Site Icon" class="p-2 mt-3" width="150">
-                <h1 class="h2 mb-0"><?=$this->sitename?></h1>
-                <p class="my-0"><?=bloginfo('description')?></p>
-                <ul class="list-inline">
-                    <li class="list-inline-item px-1">
-                        <a href="//fb.me/ndaramahigh" target="_blank" rel="noopener noreferrer">
-                            <i class="fab fa-facebook-square" aria-hidden="true"></i>
-                        </a>
-                    </li>
-                    <li class="list-inline-item px-1">
-                        <a href="//wa.me/" target="_blank" rel="noopener noreferrer">
-                            <i class="fab fa-whatsapp" aria-hidden="true"></i>
-                        </a>
-                    </li>
-                    <li class="list-inline-item px-1">
-                        <a href="//youtube.com/" target="_blank" rel="noopener noreferrer">
-                            <i class="fab fa-youtube" aria-hidden="true"></i>
-                        </a>
-                    </li>
-                    <li class="list-inline-item px-1">
-                        <a href="//instagram.com/" target="_blank" rel="noopener noreferrer">
-                            <i class="fab fa-instagram" aria-hidden="true"></i>
-                        </a>
-                    </li>
-                    <li class="list-inline-item px-1">
-                        <a href="//twitter.com/" target="_blank" rel="noopener noreferrer">
-                            <i class="fab fa-twitter" aria-hidden="true"></i>
-                        </a>
-                    </li>
-                </ul>
-            </div>
-        </header><?php 
+        parent::beforeGetHeader();
         return $this;
     }
     public function getMenu()
     {
         parent::beforeGetMenu();
-        $nav_class =  is_super_admin() ? '' : ' sticky-top';?>
-        <nav class="navbar navbar-expand-xl navbar-light white z-depth-0 py-lg-3 border-bottom<?= $nav_class ?>">
+        $nav_class =  is_super_admin() ? '' : ' sticky-top'; ?>
+        <nav class="navbar navbar-expand-xl navbar-light white z-depth-0 py-lg-3 <?= $nav_class ?>">
             <div class="container-fluid justify-content-center px-lg-4">
                 <button class="navbar-toggler d-xl-none py-2 border-0 shadow-none" type="button" data-bs-toggle="collapse" data-bs-target="#collar" aria-controls="collar" aria-expanded="false" aria-label="Toggle navigation">
                     <i class="fa fa-chevron-down d-print-none" aria-hidden="true"></i> <span class="d-none d-print-block">MENU</span>
@@ -129,7 +96,7 @@ class Webpage extends Groomer
                         'depth'           => 2,
                         'walker'          => new \WP_Bootstrap_Navwalker(),
                     )
-                );?>
+                ); ?>
             </div>
         </nav>
     <?php return $this;
@@ -147,19 +114,19 @@ class Webpage extends Groomer
     <?php }
     public function getFooter(array $scripts = [])
     {
-        parent::beforeGetFooter($scripts);?>
+        parent::beforeGetFooter($scripts); ?>
         <footer class="page-footer text-center text-md-left white lighten-2 text-black border-top border-dark border-2">
             <div class="container-fluid">
                 <div class="container-fluid mx-auto mb-4 pt-3">
                     <div class="row mx-auto justify-content-around">
                         <div class="col-10 col-lg-6 d-flex flex-center mb-lg-3 mb-2">
-                            <?= get_search_form()?>
+                            <?= get_search_form() ?>
                         </div>
                         <div class="col-12"></div>
                         <div class="col-xl-3 col-lg-3 pt-1 pb-1 text-lg-start">
                             <h1 class="text-uppercase mb-3 fw-bold h5 text-theme-primary">ABOUT US</h1>
                             <p>
-                                <?=get_bloginfo('description'); ?>
+                                <?= get_bloginfo('description'); ?>
                             </p>
                         </div>
                         <hr class="w-100 clearfix d-lg-none">
@@ -177,9 +144,9 @@ class Webpage extends Groomer
                         <div class="col-xl-3 col-lg-3 col-md-6 mt-1 mb-1 text-lg-start">
                             <h1 class="text-uppercase mb-3 fw-bold h5 text-theme-primary">Archives</h2>
 
-                            <ul class="footer-posts list-unstyled text-body">
-                                <?php wp_get_archives( 'type=monthly&limit=4&after=</span>&before=<span+class="mb-3">' );?>
-                            </ul>
+                                <ul class="footer-posts list-unstyled text-body">
+                                    <?php wp_get_archives('type=monthly&limit=4&after=</span>&before=<span+class="mb-3">'); ?>
+                                </ul>
 
                         </div>
                     </div>
@@ -187,13 +154,13 @@ class Webpage extends Groomer
             </div>
             <div class="footer-copyright py-3 text-center bg-dark">
                 <div class="container-fluid">
-                    Copyright of <?=$this->sitename?>. Made With <i class="fa-solid fa-heart" aria-hidden="true"></i> <span class="d-none">Love</span> by <a href="//caasi.co.zw" rel="noopener noreferrer" target="_blank" class="text-dark"> Caasi</a>
+                    Copyright of <?= $this->sitename ?>. Made With <i class="fa-solid fa-heart" aria-hidden="true"></i> <span class="d-none">Love</span> by <a href="//caasi.co.zw" rel="noopener noreferrer" target="_blank" class="text-dark"> Caasi</a>
                 </div>
             </div>
         </footer>
         </body>
 
         </html>
-        <?php
+<?php
     }
 }
