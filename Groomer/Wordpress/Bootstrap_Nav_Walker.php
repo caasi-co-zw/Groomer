@@ -1,6 +1,5 @@
 <?php
-
-namespace Caasi\Groomer\Groomer\Wordpress;
+namespace Caasi\Groomer\Wordpress;
 
 class Bootstrap_Nav_Walker extends \Walker_Nav_Menu
 {

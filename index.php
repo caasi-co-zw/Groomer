@@ -1,5 +1,5 @@
 <?php
-include __DIR__ . "/autoload.php";
+include __DIR__ . "/manuload.php";
 
 $web = new Caasi\Groomer\Webpage();
 $web

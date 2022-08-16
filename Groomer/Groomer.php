@@ -362,7 +362,7 @@ class Groomer
         if (!IS_WORDPRESS) {
             return $this->title . " " . html_entity_decode("&ndash;") . " " . $this->sitename;
         } else {
-            return wp_title('&raquo;', false, 'right') .  $this->sitename;
+            return sprintf("%s %s %s",$this->title, html_entity_decode('&ndash;') ,  $this->sitename);
         }
         return '';
     }
@@ -1053,11 +1053,22 @@ class Groomer
             $script = is_array($script) ? $script : [$script];
             foreach ($script as $js) :
                 $name = $js['name'] ?? uniqid('csg');
+                $version = $this->version;
+
+                if (isset($js['control_version'])) {
+                    $version = isset($js['version']) ? $js['version'] : $this->version;
+                }
                 if (!$jquery && strpos($js['src'], "jquery")) {
                     wp_deregister_script('jquery');
                     $jquery = true;
                 }
-                wp_register_script(sprintf("csg-%s", $name), get_template_directory_uri() . $js['src'], $js['deps'] ?? [], $js['version'] ?? $this->version, $js['footer'] ?? true);
+                wp_register_script(
+                    sprintf("csg-%s", $name),
+                    get_template_directory_uri() . $js['src'],
+                    $js['deps'] ?? [],
+                    $version,
+                    $js['footer'] ?? true
+                );
                 wp_enqueue_script(sprintf("csg-%s", $name));
             endforeach;
         endif;
@@ -1107,7 +1118,6 @@ class Groomer
                 endif;
                 echo $css;
             }
-        else :
         endif;
         return $this;
     }
@@ -1135,17 +1145,19 @@ class Groomer
      */
     public function getHead(string $title = null, callable $cb = null)
     {
-        if ($title) {
-            $this->title = $title;
-        }
         if (IS_WORDPRESS) {
-            $this->title = get_the_title();
+            if(!$this->title){
+                $this->title = get_the_title();
+            }
             $this->setKeywords(
                 array(
                     $this->getTitle(),
                     $this->getDetails(),
                 )
             );
+        }
+        if ($title) {
+            $this->title = $title;
         } ?>
         <!DOCTYPE html>
         <html lang="<?= $this->language ?>" dir="<?= $this->text_dir ?>">
@@ -1227,10 +1239,8 @@ class Groomer
                 });
                 wp_head();
             endif;
-            if ($this->title && !IS_WORDPRESS) :
-                @define('PG_TITLE', $this->getTitle());
-                printf("<title>%s</title>", $this->getTitle());
-            endif;
+            // @define('PG_TITLE', $this->getTitle());
+            printf("<title>%s</title>", $this->getTitle());
             if ($this->style) :
                 printf("<style type=\"text/css\">%s</style>", $this->style);
             endif; ?>
@@ -1265,7 +1275,8 @@ class Groomer
         }
         echo "<body";
         if (IS_WORDPRESS) :
-            body_class(' ' . $class);
+            echo ' ';
+            body_class($class);
         elseif ($class) :
             printf(" class=\"%s\"", $class);
         endif;
