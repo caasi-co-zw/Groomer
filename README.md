@@ -9,7 +9,7 @@ Create a custom php class first. Include the manuload.php file in your file and 
 
 include __DIR__ . '/manuload.php';
 
-class Website extends Caasi\Groomer\Groomer
+class Website extends Caasi\Groomer
 {
     public $variable1;
 
