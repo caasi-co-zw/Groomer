@@ -1,7 +1,7 @@
 <?php
 include __DIR__ . "/manuload.php";
 
-$web = new Caasi\Groomer\Webpage();
+$web = new Webpage();
 $web
     ->setTitle('Groomer Site')
     ->setDescription('Create your website easily.')

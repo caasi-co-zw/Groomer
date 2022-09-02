@@ -186,7 +186,7 @@ class Groomer
      * Website favicon url
      * @var string
      */
-    private $favicon        = '/favicon.ico';
+    protected $favicon        = '/favicon.ico';
 
     /**
      * Favicon mime image type
@@ -341,6 +341,18 @@ class Groomer
     protected $body_open = false;
 
     /**
+     * Home page url
+     * @var string
+     */
+    protected $home_url;
+
+    /**
+     * Current page url
+     * @var string
+     */
+    protected $current_url;
+
+    /**
      * Wordpress theme details
      * @var object
      */
@@ -352,178 +364,12 @@ class Groomer
      */
     public $sitename;
 
-    /**
-     * Returns a well formated page title
-     * @return string
-     * @var string
-     */
-    public function getTitle()
-    {
-        if (!IS_WORDPRESS) {
-            return $this->title . " " . html_entity_decode("&ndash;") . " " . $this->sitename;
-        } else {
-            return sprintf("%s %s %s",$this->title, html_entity_decode('&ndash;') ,  $this->sitename);
-        }
-        return '';
-    }
-
-    /**
-     * Returns the SEO site description
-     * @return string
-     * @var string
-     */
-    public function getDetails()
-    {
-        if (IS_WORDPRESS) {
-            return empty($this->details) ? get_the_excerpt() : $this->details;
-        }
-        return $this->details;
-    }
-
-    /**
-     * Returns the document author
-     * @return string
-     */
-    public function getAuthor()
-    {
-        return $this->author;
-    }
-
-    /**
-     * Returns the url of the site favicon
-     * @return string
-     */
-    public function getFavicon()
-    {
-        return $this->favicon;
-    }
-
-    /**
-     * Returns the theme color of the app
-     * @return string
-     */
-    public function getThemeColor()
-    {
-        return $this->theme_color ?? '#003883';
-    }
-
-    /**
-     * Returns the stylesheet for index or all stylesheets
-     * @return array
-     */
-    protected function getStyles(int $index = null)
-    {
-        if (null === $index) {
-            return $this->css;
-        } else {
-            return $this->css[$index] ?? null;
-        }
-    }
-
-    /**
-     * Returns js properties for index or all if no index
-     * @param int|null $index [optional] returns a script from that index
-     * @param bool $footer [optional] returns a script from that index
-     * @return array
-     */
-    protected function getScripts(int $index = null, bool $footer = true)
-    {
-        $type = $footer ? 'footer' : 'head';
-
-        if (null === $index) {
-            return $this->js[$type];
-        } else {
-            return $this->js[$type][$index];
-        }
-    }
-
-    /**
-     * Returns the robots rules
-     * @return string
-     */
-    protected function getRobots()
-    {
-        return $this->robots;
-    }
-
-    /**
-     * Returns true if translation is enabled
-     * @return bool
-     */
-    protected function getTranslate()
-    {
-        return $this->translate;
-    }
-
-    /**
-     * Returns the SEO keywords set for the page.
-     * @return string
-     */
-    protected function getKeywords()
-    {
-        $kw = '';
-        $count = 1;
-        if (is_array($this->keywords)) {
-            foreach ($this->keywords as $word) {
-                if (empty($word)) {
-                    continue;
-                }
-                if ($count > 1) {
-                    $kw .= ',';
-                }
-                $kw .= $word;
-                $count++;
-            }
-            return $kw;
-        }
-        return $this->keywords;
-    }
-    protected function getPostImage()
-    {
-        if (IS_WORDPRESS) {
-            if (has_post_thumbnail()) {
-                $this->thumbnail_alt = the_post_thumbnail_caption();
-                return the_post_thumbnail_url();
-            }
-            if (has_site_icon()) {
-                $this->thumbnail_alt = get_site_icon_url();
-                return get_site_icon_url();
-            }
-            return $this->thumbnail;
-        }
-        return WEBSITE_HOME . '/' . $this->thumbnail;
-    }
-
-    protected function addCompressionRule(string $regex,)
-    {
-    }
-    /**
-     * Compresses the html to be out-puted
-     * @var string
-     */
-    protected final function compressOutput($buffer)
-    {
-        $buffer = preg_replace($this->ob_regex['replace'], $this->ob_regex['with'], $buffer);
-        return $buffer;
-    }
-
-    /**
-     * Adds a function to the triggers
-     * @return bool
-     */
-    private function addTrigger(string $name, callable $callback)
-    {
-        $name = strtolower($name);
-        if (!array_key_exists($name, $this->triggers)) {
-            return false;
-        }
-        $this->triggers[$name][] = $callback;
-        return true;
-    }
     public function __construct(array $config, $callback = null)
     {
         // set default alt text
         $this->thumbnail_alt = 'Our logo';
+        $this->home_url = ((isset($_SERVER['HTTPS']) && "on" === $_SERVER['HTTPS']) ? 'https://' : 'http://') . $_SERVER['SERVER_NAME'];
+        $this->current_url = $this->home_url . $_SERVER['REQUEST_URI'];
 
         if (IS_WORDPRESS) :
 
@@ -562,6 +408,9 @@ class Groomer
         endif;
 
         $this->isproduction = $this->isProductionServer();
+        if(!$this->tld){
+            $this->tld = end(explode('.',SERVER_NAME));
+        }
 
         // initialized system configurations
         foreach ($config as $key => $value) {
@@ -674,6 +523,7 @@ class Groomer
         $this->route_presets[$route] =  $pattern;
         return $this;
     }
+
     /**
      * Can be used to route your urls on a custom website
      * @param array|string $method The request method to route for eg. GET
@@ -905,10 +755,6 @@ class Groomer
      */
     public function addScripts(array ...$scripts)
     {
-        if (is_array($scripts[0]) && count($scripts) == 1) {
-            $scripts = $scripts[0];
-        }
-
         $head  = array();
         $footer = array();
 
@@ -947,6 +793,71 @@ class Groomer
     }
 
     /**
+     * Change robots rules for page(s)
+     * @param string $val New rule
+     */
+    public function setRobots(string $val)
+    {
+        $this->robots = $val;
+        return $this;
+    }
+
+    /**
+     * Returns a well formated page title
+     * @return string
+     * @var string
+     */
+    public function getTitle()
+    {
+        if (!IS_WORDPRESS) {
+            return $this->title . " " . html_entity_decode("&ndash;") . " " . $this->sitename;
+        } else {
+            return sprintf("%s %s %s",$this->title, html_entity_decode('&ndash;') ,  $this->sitename);
+        }
+        return '';
+    }
+
+    /**
+     * Returns the SEO site description
+     * @return string
+     * @var string
+     */
+    public function getDetails()
+    {
+        if (IS_WORDPRESS) {
+            return empty($this->details) ? get_the_excerpt() : $this->details;
+        }
+        return $this->details;
+    }
+
+    /**
+     * Returns the document author
+     * @return string
+     */
+    public function getAuthor()
+    {
+        return $this->author;
+    }
+
+    /**
+     * Returns the url of the site favicon
+     * @return string
+     */
+    public function getFavicon()
+    {
+        return $this->favicon;
+    }
+
+    /**
+     * Returns the theme color of the app
+     * @return string
+     */
+    public function getThemeColor()
+    {
+        return $this->theme_color ?? '#003883';
+    }
+
+    /**
      * Returns true when the set local tld does not match the current tld
      * @return bool
      */
@@ -976,28 +887,6 @@ class Groomer
     }
 
     /**
-     * Change robots rules for page(s)
-     * @param string $val New rule
-     */
-    public function setRobots(string $val)
-    {
-        $this->robots = $val;
-        return $this;
-    }
-
-    /**
-     * Generates a wordpress assets link url
-     *
-     * Creates a theme friendly url to your theme assets
-     * @param string $url The short asset url eg. /img/file.png
-     * @return string
-     */
-    public static function wp_asset(string $url)
-    {
-        return get_template_directory_uri() . $url;
-    }
-
-    /**
      * Returns $active if the url matches the request url
      * @param string $link The url to match to
      * @param string $active The text to return when url matches
@@ -1021,121 +910,6 @@ class Groomer
             }
         }
         return '';
-    }
-
-    /**
-     * Enqueues a script for printing
-     * @param array|string $script The javascript files property
-     */
-    protected function printScripts(array|string $script)
-    {
-        if (!$script || empty($script)) {
-            return $this;
-        }
-
-        if (!IS_WORDPRESS) :
-            if (!is_array($script)) {
-                echo "<script src=\"{$script}?ver={$this->version}\" type=\"text/javascript\" defer=\"defer\"></script>";
-            } else {
-                $scr =  "<script src=\"{$script['src']}";
-                if ((isset($script['control_version']) && $script['control_version']) || !isset($script['control_version'])) {
-                    $scr .= sprintf("?ver=%s", $script['version'] ?? $this->version);
-                }
-                $scr .= "\" type=\"text/javascript\"";
-                if ((isset($script['async']) && $script['async']) || !isset($script['async'])) {
-                    $scr .= " defer=\"defer\"";
-                }
-                $scr .= "></script>";
-                echo $scr;
-            }
-        else :
-            $jquery = false;
-            $script = is_array($script) ? $script : [$script];
-            foreach ($script as $js) :
-                $name = $js['name'] ?? uniqid('csg');
-                $version = $this->version;
-
-                if (isset($js['control_version'])) {
-                    $version = isset($js['version']) ? $js['version'] : $this->version;
-                }
-                if (!$jquery && strpos($js['src'], "jquery")) {
-                    wp_deregister_script('jquery');
-                    $jquery = true;
-                }
-                wp_register_script(
-                    sprintf("csg-%s", $name),
-                    get_template_directory_uri() . $js['src'],
-                    $js['deps'] ?? [],
-                    $version,
-                    $js['footer'] ?? true
-                );
-                wp_enqueue_script(sprintf("csg-%s", $name));
-            endforeach;
-        endif;
-        return $this;
-    }
-
-    /**
-     * Enqueues a style for printing
-     * @param string $style The stylesheet file property
-     */
-    protected function printStylesheets($style)
-    {
-        if (!$style) {
-            return;
-        }
-
-        if (!IS_WORDPRESS) :
-            if (!is_array($style)) {
-                printf("<link rel=\"stylesheet\" type=\"text/css\"  href=\"%s?ver=%s\" media=\"all\">", $style, $this->version);
-            } else {
-                if (!isset($style['href'])) {
-                    $style['href'] = $style['src'];
-                }
-                $async = $style['async'] ?? false;
-                $media = $style['media'] ?? 'all';
-                $version = $style['control_version'] ?? false;
-                $css = '<link ';
-                if ($async) :
-                    $css .= sprintf("rel=\"preload\" href=\"%s", $style['href']);
-                else :
-                    $css .= sprintf("rel=\"stylesheet\" type=\"text/css\"  href=\"%s", $style['href'], $this->version);
-                endif;
-                if ($version) :
-                    $css .= sprintf("?ver=%s\" ", isset($style['version']) ? $style['version'] : $this->version);
-                else :
-                    $css .= sprintf("\" ");
-                endif;
-                if ($async) :
-                    $css .= 'as="style" onload="this.onload=null;this.rel=\'stylesheet\'">';
-                    $css .= sprintf("<noscript><link rel=\"stylesheet\" href=\"%s", $style['href']);
-                    if ($version) :
-                        $css .= sprintf("?ver=%s", $this->version);
-                    endif;
-                    $css .= sprintf("\"></noscript>");
-                else :
-                    $css .= sprintf("media=\"%s\">", $media, $style['href'], $this->version);
-                endif;
-                echo $css;
-            }
-        endif;
-        return $this;
-    }
-
-    /**
-     * Links a font asynchronously from google servers
-     * @param string $font The name of the font
-     */
-    protected function printFonts($font)
-    {
-        if (is_array($font)) {
-            $font_name = $font['name'];
-            $html = sprintf("<link rel=\"preconnect\" href=\"%s\" crossorigin>", $font['preconnect'] ?? '//fonts.gstatic.com');
-            $html .= sprintf("<link rel=\"preload\" as=\"style\" href=\"//fonts.googleapis.com/css2?family=%s&display=%s\">", $font_name, $font['display'] ?? 'swap');
-            $html .= sprintf("<link rel=\"stylesheet preload prefetch\" href=\"//fonts.googleapis.com/css?family=%s:%s\">", $font_name, $font['weight'] ?? '400');
-            print($html);
-        }
-        return $this;
     }
 
     /**
@@ -1304,6 +1078,122 @@ class Groomer
     }
 
     /**
+     * Generates a wordpress assets link url
+     *
+     * Creates a theme friendly url to your theme assets
+     * @param string $url The short asset url eg. /img/file.png
+     * @return string
+     */
+    public static function wp_asset(string $url)
+    {
+        return get_template_directory_uri() . $url;
+    }
+
+    /**
+     * Returns the stylesheet for index or all stylesheets
+     * @return array
+     */
+    protected function getStyles(int $index = null)
+    {
+        if (null === $index) {
+            return $this->css;
+        } else {
+            return $this->css[$index] ?? null;
+        }
+    }
+
+    /**
+     * Returns js properties for index or all if no index
+     * @param int|null $index [optional] returns a script from that index
+     * @param bool $footer [optional] returns a script from that index
+     * @return array
+     */
+    protected function getScripts(int $index = null, bool $footer = true)
+    {
+        $type = $footer ? 'footer' : 'head';
+
+        if (null === $index) {
+            return $this->js[$type];
+        } else {
+            return $this->js[$type][$index];
+        }
+    }
+
+    /**
+     * Returns the robots rules
+     * @return string
+     */
+    protected function getRobots()
+    {
+        return $this->robots;
+    }
+
+    /**
+     * Returns true if translation is enabled
+     * @return bool
+     */
+    protected function getTranslate()
+    {
+        return $this->translate;
+    }
+
+    /**
+     * Returns the SEO keywords set for the page.
+     * @return string
+     */
+    protected function getKeywords()
+    {
+        $kw = '';
+        $count = 1;
+        if (is_array($this->keywords)) {
+            foreach ($this->keywords as $word) {
+                if (empty($word)) {
+                    continue;
+                }
+                if ($count > 1) {
+                    $kw .= ',';
+                }
+                $kw .= $word;
+                $count++;
+            }
+            return $kw;
+        }
+        return $this->keywords;
+    }
+    protected function getPostImage()
+    {
+        if (IS_WORDPRESS) {
+            if (has_post_thumbnail()) {
+                $this->thumbnail_alt = the_post_thumbnail_caption();
+                return the_post_thumbnail_url();
+            }
+            if (has_site_icon()) {
+                $this->thumbnail_alt = get_site_icon_url();
+                return get_site_icon_url();
+            }
+            return $this->thumbnail;
+        }
+        return WEBSITE_HOME . '/' . $this->thumbnail;
+    }
+
+    protected function addCompressionRule(string $regex,string $replacement)
+    {
+        $this->ob_regex['replace'][] =  $regex;
+        $this->ob_regex['with'][] =  $replacement;
+        return $this;
+    }
+
+    /**
+     * Compresses the html to be out-puted
+     * @var string
+     */
+    protected final function compressOutput($buffer)
+    {
+        $buffer = preg_replace($this->ob_regex['replace'], $this->ob_regex['with'], $buffer);
+        return $buffer;
+    }
+
+    /**
      * Prevents the body tag from beng called when unecessary.
      *
      * This function must be called just before the header tag if it's in a function.
@@ -1344,5 +1234,134 @@ class Groomer
         } else {
             wp_footer();
         }
+    }
+
+    /**
+     * Enqueues a script for printing
+     * @param array|string $script The javascript files property
+     */
+    protected function printScripts(array|string $script)
+    {
+        if (!$script || empty($script)) {
+            return $this;
+        }
+
+        if (!IS_WORDPRESS) :
+            if (!is_array($script)) {
+                echo "<script src=\"{$script}?ver={$this->version}\" type=\"text/javascript\" defer=\"defer\"></script>";
+            } else {
+                $scr =  "<script src=\"{$script['src']}";
+                if ((isset($script['control_version']) && $script['control_version']) || !isset($script['control_version'])) {
+                    $scr .= sprintf("?ver=%s", $script['version'] ?? $this->version);
+                }
+                $scr .= "\" type=\"text/javascript\"";
+                if ((isset($script['async']) && $script['async']) || !isset($script['async'])) {
+                    $scr .= " defer=\"defer\"";
+                }
+                $scr .= "></script>";
+                echo $scr;
+            }
+        else :
+            $jquery = false;
+            $script = is_array($script) ? $script : [$script];
+            foreach ($script as $js) :
+                $name = $js['name'] ?? uniqid('csg');
+                $version = $this->version;
+
+                if (isset($js['control_version'])) {
+                    $version = isset($js['version']) ? $js['version'] : $this->version;
+                }
+                if (!$jquery && strpos($js['src'], "jquery")) {
+                    wp_deregister_script('jquery');
+                    $jquery = true;
+                }
+                wp_register_script(
+                    sprintf("csg-%s", $name),
+                    get_template_directory_uri() . $js['src'],
+                    $js['deps'] ?? [],
+                    $version,
+                    $js['footer'] ?? true
+                );
+                wp_enqueue_script(sprintf("csg-%s", $name));
+            endforeach;
+        endif;
+        return $this;
+    }
+
+    /**
+     * Enqueues a style for printing
+     * @param string $style The stylesheet file property
+     */
+    protected function printStylesheets($style)
+    {
+        if (!$style) {
+            return;
+        }
+
+        if (!IS_WORDPRESS) :
+            if (!is_array($style)) {
+                printf("<link rel=\"stylesheet\" type=\"text/css\"  href=\"%s?ver=%s\" media=\"all\">", $style, $this->version);
+            } else {
+                if (!isset($style['href'])) {
+                    $style['href'] = $style['src'];
+                }
+                $async = $style['async'] ?? false;
+                $media = $style['media'] ?? 'all';
+                $version = $style['control_version'] ?? false;
+                $css = '<link ';
+                if ($async) :
+                    $css .= sprintf("rel=\"preload\" href=\"%s", $style['href']);
+                else :
+                    $css .= sprintf("rel=\"stylesheet\" type=\"text/css\"  href=\"%s", $style['href'], $this->version);
+                endif;
+                if ($version) :
+                    $css .= sprintf("?ver=%s\" ", isset($style['version']) ? $style['version'] : $this->version);
+                else :
+                    $css .= sprintf("\" ");
+                endif;
+                if ($async) :
+                    $css .= 'as="style" onload="this.onload=null;this.rel=\'stylesheet\'">';
+                    $css .= sprintf("<noscript><link rel=\"stylesheet\" href=\"%s", $style['href']);
+                    if ($version) :
+                        $css .= sprintf("?ver=%s", $this->version);
+                    endif;
+                    $css .= sprintf("\"></noscript>");
+                else :
+                    $css .= sprintf("media=\"%s\">", $media, $style['href'], $this->version);
+                endif;
+                echo $css;
+            }
+        endif;
+        return $this;
+    }
+
+    /**
+     * Links a font asynchronously from google servers
+     * @param string $font The name of the font
+     */
+    protected function printFonts($font)
+    {
+        if (is_array($font)) {
+            $font_name = $font['name'];
+            $html = sprintf("<link rel=\"preconnect\" href=\"%s\" crossorigin>", $font['preconnect'] ?? '//fonts.gstatic.com');
+            $html .= sprintf("<link rel=\"preload\" as=\"style\" href=\"//fonts.googleapis.com/css2?family=%s&display=%s\">", $font_name, $font['display'] ?? 'swap');
+            $html .= sprintf("<link rel=\"stylesheet preload prefetch\" href=\"//fonts.googleapis.com/css?family=%s:%s\">", $font_name, $font['weight'] ?? '400');
+            print($html);
+        }
+        return $this;
+    }
+
+    /**
+     * Adds a function to the triggers
+     * @return bool
+     */
+    private function addTrigger(string $name, callable $callback)
+    {
+        $name = strtolower($name);
+        if (!array_key_exists($name, $this->triggers)) {
+            return false;
+        }
+        $this->triggers[$name][] = $callback;
+        return true;
     }
 };

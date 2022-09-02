@@ -32,6 +32,36 @@ class Database
     private $log = [];
 
     /**
+     * The host name used to connect to the database
+     * @var string
+     */
+    private $host;
+
+    /**
+     * The username used to connect to the database
+     * @var string
+     */
+    private $user;
+
+    /**
+     * The password used to connect to the database
+     * @var string
+     */
+    private $password;
+
+    /**
+     * The database name we're connected to
+     * @var string
+     */
+    private $db_name;
+
+    /**
+     * The database engine being used.
+     * @var string
+     */
+    private $engine;
+
+    /**
      * Return true if the connection was successful
      */
     public $connected;
@@ -59,7 +89,7 @@ class Database
             $dbhost = DB_HOST;
         }
         if (empty($dbname) && defined('DB_NAME')) {
-            $dbhost = DB_NAME;
+            $dbname = DB_NAME;
         }
         if (empty($engine)) {
             $engine = "mysql";
@@ -67,6 +97,12 @@ class Database
         if (empty($charset)) {
             $charset = "utf8";
         }
+
+        $this->user = $dbusername;
+        $this->host = $dbhost;
+        $this->password = $dbpassword;
+        $this->engine = $engine;
+        $this->db_name = $dbname;
 
         try {
 
@@ -86,6 +122,7 @@ class Database
             // store state of the database
             $this->connected = $this->database !== null;
         } catch (\Exception $e) {
+            $this->connected = false;
             $this->log($e->getMessage());
         }
         return $this->connected;
@@ -293,6 +330,7 @@ class Database
         $this->has_executed_transaction = true;
         return $this->database->commit();
     }
+
     /*
      * Last Insert Id
      * To Get Last Insert Id After Use Insert Model
@@ -302,6 +340,35 @@ class Database
     {
         return $this->database->lastInsertId();
     }
+
+    /**
+     * Creates a backup sql file for specified database names.
+     * @param string $dbname The database name or any one of the presets {all} / {*} / {this}
+     * @param string $export_name The path to save the backup
+     * @param bool $skip_lock Skip lock tables while creating backup
+     */
+    public function createBackup(string $dbname,string $export_path,bool $skip_lock = false)
+    {
+        if(strtolower($dbname) == '{all}' || $dbname == '{*}' || $dbname == '*'){
+            $dbname = '--all-databases';
+        }
+        if(strtolower($dbname) == '{this}'){
+            $dbname = $this->db_name;
+        }
+
+        if($skip_lock){
+            $dbname .= ' --skip-lock-tables';
+        }
+
+        $query = sprintf('mysqldump --host %s --user %s --password %s %s %s',$this->host,$this->user, $this->password , $dbname,$export_path);
+        return exec($query) === 0;
+    }
+    function exportDatabase($host, $user, $password, $database, $file_path)
+    {
+        $query = sprintf('mysqldump --host %s --user %s --password %s %s %s',$this->host,$this->user, $this->password , $database,$file_path);
+        return exec($query) === 0;
+    }
+
     /*
      * Close Databse Connect
      * Use It When you Want Close Connection
