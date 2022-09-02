@@ -1,4 +1,4 @@
-# Caasi Groomer?
+## Caasi Groomer?
 
 This is a small lightweight PHP system that let's you build custom websites easily. Our purpose while building this was to have full control of our website content. While this library is very small, it's also powerful - containing solutions to most stackoverflow problems that arise while building a small custom PHP website. The library works well with the Wordpress CMS too. We will create a template for this soon. NB: This system is still under development
 
