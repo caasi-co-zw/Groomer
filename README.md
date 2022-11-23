@@ -10,5 +10,5 @@
 
 ## Getting Started
 
-Start by installing the Framework using Composer `composer install`.
+Start by installing the Framework using Composer `composer install` or `composer require caasi-co-zw/groomer`.
 Add the framework to your root project folder and test with the index (default) file.
