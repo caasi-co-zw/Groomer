@@ -31,7 +31,6 @@ class Webpage extends Caasi\Groomer {
         $this->tld = 'com';
         parent::__construct($config, $cb);
         $this->name = &$this->sitename;
-        return $this;
     }
     public function getHeader() {
         //parent::beforeGetHeader();

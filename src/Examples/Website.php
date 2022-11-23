@@ -19,6 +19,5 @@ class Website extends Caasi\Groomer {
         );
         $this->setSeo(false);
         parent::__construct($config, $cb); // must be included last
-        return $this;
     }
 }
