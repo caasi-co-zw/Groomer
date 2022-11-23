@@ -2,6 +2,8 @@
 
 namespace Caasi;
 
+use PDO;
+
 /**
  * Connects you to the database server easily.
  *
@@ -286,6 +288,25 @@ class Database
     }
 
     /**
+     * Returns an array of a single column
+     * @return array
+     */
+    public function getCol()
+    {
+        return $this->fetch(\PDO::FETCH_COLUMN);
+    }
+
+
+    /**
+     * Returns an array of a single column
+     * @return array
+     */
+    public function getCols()
+    {
+        return $this->fetchAll(\PDO::FETCH_COLUMN);
+    }
+
+    /**
      * Returns all error messages logged
      * @return array
      */
@@ -363,10 +384,25 @@ class Database
         $query = sprintf('mysqldump --host %s --user %s --password %s %s %s',$this->host,$this->user, $this->password , $dbname,$export_path);
         return exec($query) === 0;
     }
-    function exportDatabase($host, $user, $password, $database, $file_path)
+
+    /**
+     * [COMING SOON] Inserts data into the database
+     * @param string $table Table to insert data into
+     * @param array $values An array with keys and their values. Keys should match the table column names.
+     */
+    public function insert(string $table,array $values)
     {
-        $query = sprintf('mysqldump --host %s --user %s --password %s %s %s',$this->host,$this->user, $this->password , $database,$file_path);
-        return exec($query) === 0;
+        $columns = array_keys($values);
+        $col_values = array_values($values);
+
+        $col_values = array_map(function(){},$col_values);
+
+        $query = "INSERT INTO $table ";
+
+        //$this->prepare($query);
+        //$this->bindValues();
+
+        return $this;
     }
 
     /*
@@ -383,18 +419,18 @@ class Database
      * Fetchs and returns data from the database server
      * @return array
      */
-    private function fetch()
+    private function fetch(int $method = \PDO::FETCH_ASSOC)
     {
-        return $this->statement->fetch(\PDO::FETCH_ASSOC);
+        return $this->statement->fetch($method);
     }
 
     /**
      * You Can Use it To get All Rows As an array
      * @return array
      */
-    private function fetchAll()
+    private function fetchAll(int $method = \PDO::FETCH_ASSOC)
     {
-        return $this->statement->fetchAll(\PDO::FETCH_ASSOC);
+        return $this->statement->fetchAll($method);
     }
 
     /**

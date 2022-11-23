@@ -1,5 +1,5 @@
 <?php
-include __DIR__ . "/manuload.php";
+include __DIR__ . "/Examples/Simple.php";
 
 $web = new Webpage();
 $web
@@ -8,30 +8,11 @@ $web
     ->getHead()
     ->openBody()
     ->getMenu()
-    ->getHeader() ?>
+    ->getHeader(); ?>
 <main>
     <div class="demo">
-        <table class="table">
-            <thead>
-                <tr>
-                    <th></th>
-                    <th></th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td scope="row"></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-                <tr>
-                    <td scope="row"></td>
-                    <td></td>
-                    <td></td>
-                </tr>
-            </tbody>
-        </table>
+        <h1>Welcome to Groomer</h1>
+        <p>Your site is ready to be customized. Start by editing the Simple.php file in the Examples folder.<br>For more advanced features, change Simple.php to Advanced.php on line 2 in this index file.</p>
     </div>
 </main>
 <?php $web->getFooter()?>

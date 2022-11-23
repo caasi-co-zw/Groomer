@@ -2,7 +2,7 @@
 
 namespace Caasi;
 
-if (!class_exists('\WP') || !defined('MANAGE_SESSION') || MANAGE_SESSION) :
+if (!defined('MANAGE_SESSION') || MANAGE_SESSION === true) :
     session_start();
 endif;
 
@@ -408,8 +408,8 @@ class Groomer
         endif;
 
         $this->isproduction = $this->isProductionServer();
-        if(!$this->tld){
-            $this->tld = end(explode('.',SERVER_NAME));
+        if (!$this->tld) {
+            $this->tld = end(explode('.', SERVER_NAME));
         }
 
         // initialized system configurations
@@ -530,7 +530,7 @@ class Groomer
      * @param string $pattern The url pattern to route for.
      * @return bool
      */
-    public function route(array|string $method, $pattern, $callback)
+    public function route($method, $pattern, $callback)
     {
         // convert to uppercase
         if (is_array($method)) {
@@ -812,7 +812,7 @@ class Groomer
         if (!IS_WORDPRESS) {
             return $this->title . " " . html_entity_decode("&ndash;") . " " . $this->sitename;
         } else {
-            return sprintf("%s %s %s",$this->title, html_entity_decode('&ndash;') ,  $this->sitename);
+            return sprintf("%s %s %s", $this->title, html_entity_decode('&ndash;'),  $this->sitename);
         }
         return '';
     }
@@ -920,7 +920,7 @@ class Groomer
     public function getHead(string $title = null, callable $cb = null)
     {
         if (IS_WORDPRESS) {
-            if(!$this->title){
+            if (!$this->title) {
                 $this->title = get_the_title();
             }
             $this->setKeywords(
@@ -1176,7 +1176,7 @@ class Groomer
         return WEBSITE_HOME . '/' . $this->thumbnail;
     }
 
-    protected function addCompressionRule(string $regex,string $replacement)
+    protected function addCompressionRule(string $regex, string $replacement)
     {
         $this->ob_regex['replace'][] =  $regex;
         $this->ob_regex['with'][] =  $replacement;
@@ -1240,7 +1240,7 @@ class Groomer
      * Enqueues a script for printing
      * @param array|string $script The javascript files property
      */
-    protected function printScripts(array|string $script)
+    protected function printScripts($script)
     {
         if (!$script || empty($script)) {
             return $this;

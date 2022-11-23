@@ -1,18 +1,23 @@
 {
-    "name": "caasi/groomer",
-    "description": "Easily create your custom websites",
-    "type": "library",
-    "license": "MIT",
-    "autoload": {
-        "psr-4": {
-            "Caasi\\Groomer\\": "Groomer/"
-        }
-    },
-    "authors": [
-        {
-            "name": "isaac-machakata",
-            "email": "isaac@caasi.co.zw"
-        }
-    ],
-    "require": {}
+	"name": "caasi-co-zw/groomer",
+	"description": "Easily create your custom websites",
+	"type": "library",
+	"license": "MIT",
+	"autoload": {
+		"psr-4": {
+			"Caasi\\Groomer\\": "src/Groomer/",
+			"Caasi\\Example\\": "src/Examples/"
+		}
+	},
+	"authors": [
+		{
+			"name": "isaac-machakata",
+			"email": "isaac@caasi.co.zw"
+		}
+	],
+	"require": {
+		"php": ">=7.4"
+	},
+	"minimum-stability": "dev",
+	"prefer-stable": true
 }
