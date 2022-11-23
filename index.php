@@ -1,5 +1,5 @@
 <?php
-include __DIR__ . "/Examples/Simple.php";
+include __DIR__ . "/tests/Simple.php";
 
 $web = new Webpage();
 $web

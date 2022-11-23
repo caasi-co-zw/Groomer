@@ -3,20 +3,31 @@
 	"description": "Easily create your custom websites",
 	"type": "project",
 	"license": "MIT",
+	"keywords": [
+		"caasi",
+		"groomer",
+		"builder",
+		"framework"
+	],
 	"autoload": {
 		"psr-4": {
-			"Caasi\\Groomer\\": "src/Groomer/",
-			"Caasi\\Example\\": "src/Examples/"
+			"Caasi\\": "src"
 		}
 	},
 	"authors": [
 		{
-			"name": "isaac-machakata",
-			"email": "isaac@caasi.co.zw"
+			"name": "Isaac Machakata",
+			"email": "isaac@caasi.co.zw",
+			"role": "Developer"
 		}
 	],
 	"require": {
-		"php": ">=7.4"
+		"php": ">=7.4",
+		"ext-json": "*"
 	},
-	"minimum-stability": "dev"
+	"minimum-stability": "dev",
+	"config": {
+		"sort-packages": true
+	},
+	"homepage": "https://github.com/caasi-co-zw/Groomer"
 }

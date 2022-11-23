@@ -1,7 +1,8 @@
 <?php
-include __DIR__ . '/../autoload.php';
+use Caasi\Groomer;
+include __DIR__.'/../vendor/autoload.php';
 
-class Webpage extends Caasi\Groomer {
+class Webpage extends Groomer {
     public $name;
     /**
      * @var bool

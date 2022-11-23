@@ -2,3 +2,4 @@ vendor
 composer.min.json
 composer.lock
 composer.lock
+tests/assets/style.min.css
