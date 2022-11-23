@@ -1,3 +1,4 @@
 vendor
-composer.lock
 composer.min.json
+composer.lock
+composer.lock
