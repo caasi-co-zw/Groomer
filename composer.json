@@ -1,7 +1,7 @@
 {
 	"name": "caasi-co-zw/groomer",
 	"description": "Easily create your custom websites",
-	"type": "library",
+	"type": "project",
 	"license": "MIT",
 	"autoload": {
 		"psr-4": {
