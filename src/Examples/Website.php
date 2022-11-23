@@ -1,22 +1,20 @@
 <?php
 
-include __DIR__ . '/../manuload.php';
+include __DIR__ . '/../autoload.php';
 
-class Website extends Caasi\Groomer
-{
+class Website extends Caasi\Groomer {
     public $variable1;
 
-    public function __construct($config = [], $cb = null)
-    {
+    public function __construct($config = [], $cb = null) {
         // your code
         $this->addStyles(
             array(
-                'src'=>'/css/style.min.css'
+                'src' => '/css/style.min.css'
             )
         );
         $this->addStyles(
             array(
-                'src'=>'/js/app.min.js'
+                'src' => '/js/app.min.js'
             )
         );
         $this->setSeo(false);
