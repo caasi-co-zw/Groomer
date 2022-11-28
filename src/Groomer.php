@@ -713,7 +713,7 @@ class Groomer {
      * Adds a stylesheet to queque
      * @param array $sheets A list of the style sheet
      */
-    public function addStyles(array ...$sheets) {
+    public function addStyle(array ...$sheets) {
         $this->css = array_merge($this->css, $sheets);
         return $this;
     }
@@ -722,7 +722,7 @@ class Groomer {
      * Adds css to <style> tag
      * @param string $style CSS to be added in <style>
      */
-    public function setStyles(string $style) {
+    public function addInlineStyles(string $style) {
         if (!$this->style) {
             $this->style = $style;
         } else {
