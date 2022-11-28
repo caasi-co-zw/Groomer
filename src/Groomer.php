@@ -969,7 +969,11 @@ class Groomer {
                     $styles = $this->getStyles();
                     foreach ($styles as $style) :
                         $name = $style['name'] ?? uniqid('csg');
-                        wp_register_style(sprintf("csg-%s", $name), get_template_directory_uri() . $style['src'], $style['deps'] ?? [], $style['version'] ?? $this->version, $style['media'] ?? 'all');
+                        if (WP_SHORTEN_ASSETS_URL) :
+                            wp_register_style(sprintf("csg-%s", $name), get_template_directory_uri() . $style['src'], $style['deps'] ?? [], $style['version'] ?? $this->version, $style['media'] ?? 'all');
+                        else :
+                            wp_register_style(sprintf("csg-%s", $name), $style['src'], $style['deps'] ?? [], $style['version'] ?? $this->version, $style['media'] ?? 'all');
+                        endif;
                         wp_enqueue_style(sprintf("csg-%s", $name));
                     endforeach;
                 });
