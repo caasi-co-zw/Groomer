@@ -6,19 +6,23 @@ if (!defined('MANAGE_SESSION') || MANAGE_SESSION === true) :
     session_start();
 endif;
 
-/**
- * Server name in this format caasi.co.zw
- * @var string
- */
+if (!defined('WP_SHORTEN_ASSETS_URL')) {
+    @define('WP_SHORTEN_ASSETS_URL', false);
+}
+
 if (!defined('SERVER_NAME')) :
+    /**
+     * Server name in this format caasi.co.zw
+     * @var string
+     */
     define('SERVER_NAME', $_SERVER['SERVER_NAME']);
 endif;
 
-/**
- * Returns the domain name
- * @var string
- */
 if (!defined('APP_NAME')) {
+    /**
+     * Returns the domain name
+     * @var string
+     */
     define('APP_NAME', ucwords(explode('.', SERVER_NAME)[0]));
 }
 
@@ -40,44 +44,44 @@ define('CURRENT_PAGE', WEBSITE_HOME . $_SERVER['REQUEST_URI']);
  */
 define('IS_WORDPRESS', class_exists('\WP') && function_exists('wp_enqueue_script'));
 
-/**
- * Returns set page title
- * @var string
- */
 if (!defined("PG_TITLE")) :
+    /**
+     * Returns set page title
+     * @var string
+     */
     define('PG_TITLE', "Caasi Groomer");
 endif;
 
-/**
- * Will include the database file when set to true
- * @var bool
- */
 if (!defined("INC_DATABASE")) :
+    /**
+     * Will include the database file when set to true
+     * @var bool
+     */
     define('INC_DATABASE', true);
 endif;
 
-/**
- * Returns database file path
- * @var string
- */
 if (!defined('DATABASE_FILE')) {
-    define('DATABASE_FILE', __DIR__ . '/../Database/Database.php');
+    /**
+     * Returns database file path
+     * @var string
+     */
+    define('DATABASE_FILE', __DIR__ . '/Database.php');
 }
 
-/**
- * Returns the path to Bootstrap Navigation Walker
- * @var string
- */
 if (!defined('BOOTSTRAP_NAV_WALKER')) {
-    define('BOOTSTRAP_NAV_WALKER', __DIR__ . '/../Wordpress/Bootstrap_Nav_Walker.php');
+    /**
+     * Returns the path to Bootstrap Navigation Walker
+     * @var string
+     */
+    define('BOOTSTRAP_NAV_WALKER', __DIR__ . '/Wordpress/Bootstrap_Nav_Walker.php');
 }
 
-/**
- * Returns the path to Custom Comments Walker
- * @var string
- */
 if (!defined('COMMMENTS_WALKER')) {
-    define('COMMMENTS_WALKER', __DIR__ . '/../Wordpress/Comments_Walker.php');
+    /**
+     * Returns the path to Custom Comments Walker
+     * @var string
+     */
+    define('COMMMENTS_WALKER', __DIR__ . '/Wordpress/Comments_Walker.php');
 }
 
 if (file_exists(DATABASE_FILE) && INC_DATABASE) {
@@ -95,8 +99,7 @@ if (file_exists(DATABASE_FILE) && INC_DATABASE) {
  * @version 1.1
  * @license GPL-3.0+ http://www.gnu.org/licenses/gpl-3.0.txt
  */
-class Groomer
-{
+class Groomer {
     /**
      * The system name
      * @var string
@@ -364,8 +367,7 @@ class Groomer
      */
     public $sitename;
 
-    public function __construct(array $config, $callback = null)
-    {
+    public function __construct(array $config, $callback = null) {
         // set default alt text
         $this->thumbnail_alt = 'Our logo';
         $this->home_url = ((isset($_SERVER['HTTPS']) && "on" === $_SERVER['HTTPS']) ? 'https://' : 'http://') . $_SERVER['SERVER_NAME'];
@@ -511,15 +513,12 @@ class Groomer
         if ($callback && is_callable($callback)) :
             call_user_func($callback);
         endif;
-
-        return $this;
     }
 
     /**
      * Create your own regex presets for cleaner code.
      */
-    public function addRouteVariable(string $route, string $pattern)
-    {
+    public function addRouteVariable(string $route, string $pattern) {
         $this->route_presets[$route] =  $pattern;
         return $this;
     }
@@ -530,8 +529,7 @@ class Groomer
      * @param string $pattern The url pattern to route for.
      * @return bool
      */
-    public function route($method, $pattern, $callback)
-    {
+    public function route($method, $pattern, $callback) {
         // convert to uppercase
         if (is_array($method)) {
             array_walk($method, function (&$value) {
@@ -581,8 +579,7 @@ class Groomer
      * Changes the title of the page.
      * @param string $title The new title
      */
-    public function setTitle(string $title)
-    {
+    public function setTitle(string $title) {
         $this->title = $title;
         return $this;
     }
@@ -591,8 +588,7 @@ class Groomer
      * Changes the page author
      * @param string $author Author name
      */
-    public function setAuthor(string $author)
-    {
+    public function setAuthor(string $author) {
         $this->author = $author;
         return $this;
     }
@@ -601,8 +597,7 @@ class Groomer
      * Sets the twitter owner of the site
      * @param string $username Site username
      */
-    public function setTwitterSite(string $username)
-    {
+    public function setTwitterSite(string $username) {
         $this->tw_site = $username;
         return $this;
     }
@@ -611,8 +606,7 @@ class Groomer
      * Sets a theme color for the web app
      * @param string $color A hex color
      */
-    public function setThemeColor(string $color)
-    {
+    public function setThemeColor(string $color) {
         $this->theme_color = $color;
         return $this;
     }
@@ -621,8 +615,7 @@ class Groomer
      * Sets the schema json for the page
      * @param string $schema The schema.org json
      */
-    public function setSchema($schema)
-    {
+    public function setSchema($schema) {
         $this->schema = $schema;
         return $this;
     }
@@ -631,8 +624,7 @@ class Groomer
      * Prepends the new seo keywords for the page
      * @param string|array $schema The seo keywords
      */
-    public function addKeywords($keywords)
-    {
+    public function addKeywords($keywords) {
         if (is_array($keywords)) :
             $this->keywords = array_merge($this->keywords, $keywords);
         else :
@@ -645,8 +637,7 @@ class Groomer
      * Sets the new (overrides any existsing) seo keywords for the page
      * @param string|array $schema The seo keywords
      */
-    public function setKeywords($keywords)
-    {
+    public function setKeywords($keywords) {
         if (is_array($keywords)) :
             $this->keywords = $keywords;
         else :
@@ -659,8 +650,7 @@ class Groomer
      * Sets the page thumbnail
      * @param string $schema The thumbnail url
      */
-    public function setPostImage($img)
-    {
+    public function setPostImage($img) {
         $this->thumbnail = $img;
         return $this;
     }
@@ -669,8 +659,7 @@ class Groomer
      * Sets the seo excerpt for the page
      * @param string $schema The seo excerpt
      */
-    public function setExcerpt(string $excerpt)
-    {
+    public function setExcerpt(string $excerpt) {
         $this->details = $excerpt;
         return $this;
     }
@@ -679,8 +668,7 @@ class Groomer
      * Sets the seo excerpt for the page
      * @param string $schema The seo excerpt
      */
-    public function setDetails(string $excerpt)
-    {
+    public function setDetails(string $excerpt) {
         $this->details = $excerpt;
         return $this;
     }
@@ -689,8 +677,7 @@ class Groomer
      * Sets the seo excerpt for the page
      * @param string $schema The seo excerpt
      */
-    public function setDescription(string $excerpt)
-    {
+    public function setDescription(string $excerpt) {
         $this->details = $excerpt;
         return $this;
     }
@@ -699,8 +686,7 @@ class Groomer
      * Set the website language
      * @var string
      */
-    public function setLanguage(string $language)
-    {
+    public function setLanguage(string $language) {
         $this->language = $language;
         return $this;
     }
@@ -709,8 +695,7 @@ class Groomer
      * Enable or disable SEO
      * @param bool $seo Enables or disables SEO
      */
-    public function setSeo(bool $seo)
-    {
+    public function setSeo(bool $seo) {
         $this->seo = $seo;
         return $this;
     }
@@ -719,8 +704,7 @@ class Groomer
      * Set the favicon url
      * @param string $url Url of the favicon
      */
-    public function setFavicon(string $url)
-    {
+    public function setFavicon(string $url) {
         $this->favicon = $url;
         return $this;
     }
@@ -729,8 +713,7 @@ class Groomer
      * Adds a stylesheet to queque
      * @param array $sheets A list of the style sheet
      */
-    public function addStyles(array ...$sheets)
-    {
+    public function addStyles(array ...$sheets) {
         $this->css = array_merge($this->css, $sheets);
         return $this;
     }
@@ -739,8 +722,7 @@ class Groomer
      * Adds css to <style> tag
      * @param string $style CSS to be added in <style>
      */
-    public function setStyles(string $style)
-    {
+    public function setStyles(string $style) {
         if (!$this->style) {
             $this->style = $style;
         } else {
@@ -753,8 +735,7 @@ class Groomer
      * Adds a javascript file to queque
      * @param array $scripts A list of the scripts
      */
-    public function addScripts(array ...$scripts)
-    {
+    public function addScripts(array ...$scripts) {
         $head  = array();
         $footer = array();
 
@@ -776,8 +757,7 @@ class Groomer
      * Add asyncronous google fonts to your website.
      * @param array $fonts A list of fonts, each enclosed in an array.
      */
-    public function setFonts(array ...$fonts)
-    {
+    public function setFonts(array ...$fonts) {
         $this->fonts = array_merge($this->fonts, $fonts);
         return $this;
     }
@@ -786,8 +766,7 @@ class Groomer
      * Add asyncronous google fonts to your website.
      * @param array $fonts A list of fonts, each enclosed in an array.
      */
-    public function addFonts(array ...$fonts)
-    {
+    public function addFonts(array ...$fonts) {
         $this->setFonts($fonts);
         return $this;
     }
@@ -796,8 +775,7 @@ class Groomer
      * Change robots rules for page(s)
      * @param string $val New rule
      */
-    public function setRobots(string $val)
-    {
+    public function setRobots(string $val) {
         $this->robots = $val;
         return $this;
     }
@@ -807,8 +785,7 @@ class Groomer
      * @return string
      * @var string
      */
-    public function getTitle()
-    {
+    public function getTitle() {
         if (!IS_WORDPRESS) {
             return $this->title . " " . html_entity_decode("&ndash;") . " " . $this->sitename;
         } else {
@@ -822,8 +799,7 @@ class Groomer
      * @return string
      * @var string
      */
-    public function getDetails()
-    {
+    public function getDetails() {
         if (IS_WORDPRESS) {
             return empty($this->details) ? get_the_excerpt() : $this->details;
         }
@@ -834,8 +810,7 @@ class Groomer
      * Returns the document author
      * @return string
      */
-    public function getAuthor()
-    {
+    public function getAuthor() {
         return $this->author;
     }
 
@@ -843,8 +818,7 @@ class Groomer
      * Returns the url of the site favicon
      * @return string
      */
-    public function getFavicon()
-    {
+    public function getFavicon() {
         return $this->favicon;
     }
 
@@ -852,8 +826,7 @@ class Groomer
      * Returns the theme color of the app
      * @return string
      */
-    public function getThemeColor()
-    {
+    public function getThemeColor() {
         return $this->theme_color ?? '#003883';
     }
 
@@ -861,8 +834,7 @@ class Groomer
      * Returns true when the set local tld does not match the current tld
      * @return bool
      */
-    public function isProductionServer()
-    {
+    public function isProductionServer() {
         $server_tld = explode('.', SERVER_NAME);
         $server_tld = end($server_tld);
         return strtolower($server_tld) !== strtolower($this->tld);
@@ -872,16 +844,14 @@ class Groomer
      * Returns true if running on a local server
      * @return bool
      */
-    public function isTestingServer()
-    {
+    public function isTestingServer() {
         return !$this->isProductionServer();
     }
 
     /**
      * Enables or disables google translating the site
      */
-    public function allowTranslating(bool $trans)
-    {
+    public function allowTranslating(bool $trans) {
         $this->translate = $trans;
         return $this;
     }
@@ -892,8 +862,7 @@ class Groomer
      * @param string $active The text to return when url matches
      * @return string
      */
-    public function active($link, string $active = 'active')
-    {
+    public function active($link, string $active = 'active') {
         if (IS_WORDPRESS) {
             if (is_array($link) && in_array($_SERVER['REQUEST_URI'], $link)) {
                 return $active;
@@ -917,8 +886,7 @@ class Groomer
      * @param string $title Dynamically change the page title
      * @param callback $cb A callback function to be executed before the function stops
      */
-    public function getHead(string $title = null, callable $cb = null)
-    {
+    public function getHead(string $title = null, callable $cb = null) {
         if (IS_WORDPRESS) {
             if (!$this->title) {
                 $this->title = get_the_title();
@@ -1031,8 +999,7 @@ class Groomer
      * @param string $title Dynamically change the page title
      * @param callback $cb A callback function to be executed before the function stops
      */
-    public function getMeta($title = null, $cb = null)
-    {
+    public function getMeta($title = null, $cb = null) {
         $this->getHead($title, $cb);
         return $this;
     }
@@ -1042,8 +1009,7 @@ class Groomer
      * @param string $class Body class
      * @param string $args Additional arguments to be added
      */
-    public function openBody($class = null, $args = null)
-    {
+    public function openBody($class = null, $args = null) {
         if ($this->body_open) {
             return $this;
         }
@@ -1068,8 +1034,7 @@ class Groomer
      * @link https://stackoverflow.com/questions/677419/how-to-detect-search-engine-bots-with-php
      * @return bool
      */
-    public function isCrawlingBot()
-    {
+    public function isCrawlingBot() {
         if (preg_match('/abacho|accona|AddThis|AdsBot|ahoy|AhrefsBot|AISearchBot|alexa|altavista|anthill|appie|applebot|arale|araneo|AraybOt|ariadne|arks|aspseek|ATN_Worldwide|Atomz|baiduspider|baidu|bbot|bingbot|bing|Bjaaland|BlackWidow|BotLink|bot|boxseabot|bspider|calif|CCBot|ChinaClaw|christcrawler|CMC\/0\.01|combine|confuzzledbot|contaxe|CoolBot|cosmos|crawler|crawlpaper|crawl|curl|cusco|cyberspyder|cydralspider|dataprovider|digger|DIIbot|DotBot|downloadexpress|DragonBot|DuckDuckBot|dwcp|EasouSpider|ebiness|ecollector|elfinbot|esculapio|ESI|esther|eStyle|Ezooms|facebookexternalhit|facebook|facebot|fastcrawler|FatBot|FDSE|FELIX IDE|fetch|fido|find|Firefly|fouineur|Freecrawl|froogle|gammaSpider|gazz|gcreep|geona|Getterrobo-Plus|get|girafabot|golem|googlebot|\-google|grabber|GrabNet|griffon|Gromit|gulliver|gulper|hambot|havIndex|hotwired|htdig|HTTrack|ia_archiver|iajabot|IDBot|Informant|InfoSeek|InfoSpiders|INGRID\/0\.1|inktomi|inspectorwww|Internet Cruiser Robot|irobot|Iron33|JBot|jcrawler|Jeeves|jobo|KDD\-Explorer|KIT\-Fireball|ko_yappo_robot|label\-grabber|larbin|legs|libwww-perl|linkedin|Linkidator|linkwalker|Lockon|logo_gif_crawler|Lycos|m2e|majesticsEO|marvin|mattie|mediafox|mediapartners|MerzScope|MindCrawler|MJ12bot|mod_pagespeed|moget|Motor|msnbot|muncher|muninn|MuscatFerret|MwdSearch|NationalDirectory|naverbot|NEC\-MeshExplorer|NetcraftSurveyAgent|NetScoop|NetSeer|newscan\-online|nil|none|Nutch|ObjectsSearch|Occam|openstat.ru\/Bot|packrat|pageboy|ParaSite|patric|pegasus|perlcrawler|phpdig|piltdownman|Pimptrain|pingdom|pinterest|pjspider|PlumtreeWebAccessor|PortalBSpider|psbot|rambler|Raven|RHCS|RixBot|roadrunner|Robbie|robi|RoboCrawl|robofox|Scooter|Scrubby|Search\-AU|searchprocess|search|SemrushBot|Senrigan|seznambot|Shagseeker|sharp\-info\-agent|sift|SimBot|Site Valet|SiteSucker|skymob|SLCrawler\/2\.0|slurp|snooper|solbot|speedy|spider_monkey|SpiderBot\/1\.0|spiderline|spider|suke|tach_bw|TechBOT|TechnoratiSnoop|templeton|teoma|titin|topiclink|twitterbot|twitter|UdmSearch|Ukonline|UnwindFetchor|URL_Spider_SQL|urlck|urlresolver|Valkyrie libwww\-perl|verticrawl|Victoria|void\-bot|Voyager|VWbot_K|wapspider|WebBandit\/1\.0|webcatcher|WebCopier|WebFindBot|WebLeacher|WebMechanic|WebMoose|webquest|webreaper|webspider|webs|WebWalker|WebZip|wget|whowhere|winona|wlm|WOLP|woriobot|WWWC|XGET|xing|yahoo|YandexBot|YandexMobileBot|yandex|yeti|Zeus/i', $_SERVER['HTTP_USER_AGENT'])) {
             return true; // 'Above given bots detected'
         }
@@ -1084,8 +1049,7 @@ class Groomer
      * @param string $url The short asset url eg. /img/file.png
      * @return string
      */
-    public static function wp_asset(string $url)
-    {
+    public static function wp_asset(string $url) {
         return get_template_directory_uri() . $url;
     }
 
@@ -1093,8 +1057,7 @@ class Groomer
      * Returns the stylesheet for index or all stylesheets
      * @return array
      */
-    protected function getStyles(int $index = null)
-    {
+    protected function getStyles(int $index = null) {
         if (null === $index) {
             return $this->css;
         } else {
@@ -1108,8 +1071,7 @@ class Groomer
      * @param bool $footer [optional] returns a script from that index
      * @return array
      */
-    protected function getScripts(int $index = null, bool $footer = true)
-    {
+    protected function getScripts(int $index = null, bool $footer = true) {
         $type = $footer ? 'footer' : 'head';
 
         if (null === $index) {
@@ -1123,8 +1085,7 @@ class Groomer
      * Returns the robots rules
      * @return string
      */
-    protected function getRobots()
-    {
+    protected function getRobots() {
         return $this->robots;
     }
 
@@ -1132,8 +1093,7 @@ class Groomer
      * Returns true if translation is enabled
      * @return bool
      */
-    protected function getTranslate()
-    {
+    protected function getTranslate() {
         return $this->translate;
     }
 
@@ -1141,8 +1101,7 @@ class Groomer
      * Returns the SEO keywords set for the page.
      * @return string
      */
-    protected function getKeywords()
-    {
+    protected function getKeywords() {
         $kw = '';
         $count = 1;
         if (is_array($this->keywords)) {
@@ -1160,8 +1119,7 @@ class Groomer
         }
         return $this->keywords;
     }
-    protected function getPostImage()
-    {
+    protected function getPostImage() {
         if (IS_WORDPRESS) {
             if (has_post_thumbnail()) {
                 $this->thumbnail_alt = the_post_thumbnail_caption();
@@ -1176,8 +1134,7 @@ class Groomer
         return WEBSITE_HOME . '/' . $this->thumbnail;
     }
 
-    protected function addCompressionRule(string $regex, string $replacement)
-    {
+    protected function addCompressionRule(string $regex, string $replacement) {
         $this->ob_regex['replace'][] =  $regex;
         $this->ob_regex['with'][] =  $replacement;
         return $this;
@@ -1187,8 +1144,7 @@ class Groomer
      * Compresses the html to be out-puted
      * @var string
      */
-    protected final function compressOutput($buffer)
-    {
+    protected final function compressOutput($buffer) {
         $buffer = preg_replace($this->ob_regex['replace'], $this->ob_regex['with'], $buffer);
         return $buffer;
     }
@@ -1198,8 +1154,7 @@ class Groomer
      *
      * This function must be called just before the header tag if it's in a function.
      */
-    protected function beforeHeader()
-    {
+    protected function beforeHeader() {
         if (!$this->body_open) {
             $this->openBody();
         }
@@ -1211,8 +1166,7 @@ class Groomer
      *
      * Must be the first thing in a getMenu() function
      */
-    protected function beforeMenu()
-    {
+    protected function beforeMenu() {
         if (!$this->body_open) {
             $this->openBody();
         }
@@ -1223,8 +1177,7 @@ class Groomer
      * Prints the html markup (static by default) of the website footer.
      * @param array $scripts An array of footer scripts.
      */
-    protected function beforeFooter(array $scripts = [])
-    {
+    protected function beforeFooter(array $scripts = []) {
         $this->js['footer'] = array_merge($scripts, $this->js['footer']);
         if (!IS_WORDPRESS) {
             foreach ($this->getScripts() as $script) {
@@ -1240,8 +1193,7 @@ class Groomer
      * Enqueues a script for printing
      * @param array|string $script The javascript files property
      */
-    protected function printScripts($script)
-    {
+    protected function printScripts($script) {
         if (!$script || empty($script)) {
             return $this;
         }
@@ -1292,8 +1244,7 @@ class Groomer
      * Enqueues a style for printing
      * @param string $style The stylesheet file property
      */
-    protected function printStylesheets($style)
-    {
+    protected function printStylesheets($style) {
         if (!$style) {
             return;
         }
@@ -1339,8 +1290,7 @@ class Groomer
      * Links a font asynchronously from google servers
      * @param string $font The name of the font
      */
-    protected function printFonts($font)
-    {
+    protected function printFonts($font) {
         if (is_array($font)) {
             $font_name = $font['name'];
             $html = sprintf("<link rel=\"preconnect\" href=\"%s\" crossorigin>", $font['preconnect'] ?? '//fonts.gstatic.com');
@@ -1355,8 +1305,7 @@ class Groomer
      * Adds a function to the triggers
      * @return bool
      */
-    private function addTrigger(string $name, callable $callback)
-    {
+    private function addTrigger(string $name, callable $callback) {
         $name = strtolower($name);
         if (!array_key_exists($name, $this->triggers)) {
             return false;
