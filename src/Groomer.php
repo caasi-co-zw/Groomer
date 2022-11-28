@@ -719,10 +719,12 @@ class Groomer {
     }
     /**
      * Adds a stylesheet to queque
-     * @param array $sheets A list of the style sheet
+     * @param array|Css[] $sheets A list of the style sheet
      */
-    public function addStyles(array ...$sheets) {
-        $this->css = array_merge($this->css, $sheets);
+    public function addStyles(...$sheets) {
+        if (is_array($sheets)) {
+            $this->css = array_merge($this->css, $sheets);
+        }
         return $this;
     }
 
@@ -1241,7 +1243,7 @@ class Groomer {
                 }
                 wp_register_script(
                     sprintf("csg-%s", $name),
-                    WP_SHORTEN_ASSETS_URL?$js['src']:get_template_directory_uri() . $js['src'],
+                    WP_SHORTEN_ASSETS_URL ? get_template_directory_uri() . $js['src'] : $js['src'],
                     $js['deps'] ?? [],
                     $version,
                     $js['footer'] ?? true
