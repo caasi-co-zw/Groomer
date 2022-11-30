@@ -7,87 +7,8 @@ if (!defined('MANAGE_SESSION') || MANAGE_SESSION === true) :
 endif;
 
 if (!defined('WP_SHORTEN_ASSETS_URL')) {
-    @define('WP_SHORTEN_ASSETS_URL', false);
+    define('WP_SHORTEN_ASSETS_URL', false);
 }
-
-if (!defined('SERVER_NAME')) :
-    /**
-     * Server name in this format caasi.co.zw
-     * @var string
-     */
-    define('SERVER_NAME', $_SERVER['SERVER_NAME']);
-endif;
-
-if (!defined('APP_NAME')) {
-    /**
-     * Returns the domain name
-     * @var string
-     */
-    define('APP_NAME', ucwords(explode('.', SERVER_NAME)[0]));
-}
-
-/**
- * Homepage url of the site in this format https://caasi.co.zw/
- * @var string
- */
-define('WEBSITE_HOME', ((isset($_SERVER['HTTPS']) && "on" === $_SERVER['HTTPS']) ? 'https://' : 'http://') . SERVER_NAME);
-
-/**
- * Returns the current opened page url in this format https://caasi.co.zw/websites/
- * @var string
- */
-define('CURRENT_PAGE', WEBSITE_HOME . $_SERVER['REQUEST_URI']);
-
-/**
- * Returns true if on a wordpress website.
- * @var bool
- */
-define('IS_WORDPRESS', class_exists('\WP') && function_exists('wp_enqueue_script'));
-
-if (!defined("PG_TITLE")) :
-    /**
-     * Returns set page title
-     * @var string
-     */
-    define('PG_TITLE', "Caasi Groomer");
-endif;
-
-if (!defined("INC_DATABASE")) :
-    /**
-     * Will include the database file when set to true
-     * @var bool
-     */
-    define('INC_DATABASE', true);
-endif;
-
-if (!defined('DATABASE_FILE')) {
-    /**
-     * Returns database file path
-     * @var string
-     */
-    define('DATABASE_FILE', __DIR__ . '/Database.php');
-}
-
-if (!defined('BOOTSTRAP_NAV_WALKER')) {
-    /**
-     * Returns the path to Bootstrap Navigation Walker
-     * @var string
-     */
-    define('BOOTSTRAP_NAV_WALKER', __DIR__ . '/Wordpress/Bootstrap_Nav_Walker.php');
-}
-
-if (!defined('COMMMENTS_WALKER')) {
-    /**
-     * Returns the path to Custom Comments Walker
-     * @var string
-     */
-    define('COMMMENTS_WALKER', __DIR__ . '/Wordpress/Comments_Walker.php');
-}
-
-if (file_exists(DATABASE_FILE) && INC_DATABASE) {
-    include DATABASE_FILE;
-}
-
 
 /**
  * Prepares and prints the markup to the browser.
@@ -312,6 +233,9 @@ class Groomer {
      * @var string
      */
     protected $tld;
+    protected $menu;
+    protected $post_image;
+    protected $errors;
 
     /**
      * A list of google fonts to be included
@@ -344,17 +268,9 @@ class Groomer {
     protected $body_open = false;
 
     /**
-     * Home page url
-     * @var string
+     * Will return true if on mobile device
      */
-    protected $home_url;
-
-    /**
-     * Current page url
-     * @var string
-     */
-    protected $current_url;
-
+    protected $is_mobile = false;
     /**
      * Wordpress theme details
      * @var object
@@ -365,22 +281,20 @@ class Groomer {
      * Name of the website
      * @var string
      */
-    public $sitename;
+    public $site_name;
 
     public function __construct(array $config, $callback = null) {
         // set default alt text
         $this->thumbnail_alt = 'Our logo';
-        $this->home_url = ((isset($_SERVER['HTTPS']) && "on" === $_SERVER['HTTPS']) ? 'https://' : 'http://') . $_SERVER['SERVER_NAME'];
-        $this->current_url = $this->home_url . $_SERVER['REQUEST_URI'];
 
-        if (IS_WORDPRESS) :
+        if ($this->isWordPress()) :
 
             // exit if called directly and on wordpress
             defined('ABSPATH') || exit;
 
             // get theme details
             $this->theme = wp_get_theme();
-            $this->sitename = get_bloginfo('name');
+            $this->site_name = get_bloginfo('name');
 
             // site info
             if (get_bloginfo('description')) {
@@ -394,7 +308,7 @@ class Groomer {
             $this->language = get_bloginfo('language');
 
             // device type
-            $this->ismobile = wp_is_mobile();
+            $this->is_mobile = wp_is_mobile();
 
             // fix site icon
             if (has_site_icon()) :
@@ -408,11 +322,6 @@ class Groomer {
                 )
             );
         endif;
-
-        $this->isproduction = $this->isProductionServer();
-        if (!$this->tld) {
-            $this->tld = end(explode('.', SERVER_NAME));
-        }
 
         // initialized system configurations
         foreach ($config as $key => $value) {
@@ -791,17 +700,72 @@ class Groomer {
     }
 
     /**
+     * Returns true if installed on WordPress CMS
+     * @return bool
+     */
+    public function isWordPress() {
+        return class_exists('WP');
+    }
+
+
+    /**
+     * Server name in this format caasi.co.zw
+     * @return string
+     */
+    public function getServerName() {
+        return $_SERVER['SERVER_NAME'];
+    }
+
+    /**
+     * Returns the domain name
+     * @return string
+     */
+    public function getAppName() {
+        return explode('.', $this->getServerName())[0];
+    }
+
+    /**
+     * Homepage url of the site in this format https://caasi.co.zw/
+     * @return string
+     */
+    public function getWebsiteHome() {
+        return (($this->onSecureConnection() ? 'https://' : 'http://') . $this->getServerName());
+    }
+
+    /**
+     * Returns the TLD for the site
+     */
+    public function getCurrentTLD() {
+        $site = explode('.', $this->getServerName());
+        return $this->tld = end($site);
+    }
+    /**
+     * Returns true if the page is on https
+     * @return bool
+     */
+    public function onSecureConnection() {
+        $ssl = $_SERVER['HTTPS'] ?? null;
+        return $ssl === "on";
+    }
+
+    /**
+     * Returns the current opened page url in this format https://caasi.co.zw/websites/
+     * @return string
+     */
+    public function getCurrentPage() {
+        return $this->getWebsiteHome() . $_SERVER['REQUEST_URI'];
+    }
+
+    /**
      * Returns a well formated page title
      * @return string
      * @var string
      */
     public function getTitle() {
-        if (!IS_WORDPRESS) {
-            return $this->title . " " . html_entity_decode("&ndash;") . " " . $this->sitename;
-        } else {
-            return sprintf("%s %s %s", $this->title, html_entity_decode('&ndash;'),  $this->sitename);
+        if (!$this->isWordPress()) {
+            return $this->title . " " . html_entity_decode("&ndash;") . " " . $this->site_name;
         }
-        return '';
+        return sprintf("%s %s %s", $this->title, html_entity_decode('&ndash;'),  $this->site_name);
     }
 
     /**
@@ -810,7 +774,7 @@ class Groomer {
      * @var string
      */
     public function getDetails() {
-        if (IS_WORDPRESS) {
+        if ($this->isWordPress()) {
             return empty($this->details) ? get_the_excerpt() : $this->details;
         }
         return $this->details;
@@ -845,7 +809,7 @@ class Groomer {
      * @return bool
      */
     public function isProductionServer() {
-        $server_tld = explode('.', SERVER_NAME);
+        $server_tld = explode('.', $this->getServerName());
         $server_tld = end($server_tld);
         return strtolower($server_tld) !== strtolower($this->tld);
     }
@@ -873,7 +837,7 @@ class Groomer {
      * @return string
      */
     public function active($link, string $active = 'active') {
-        if (IS_WORDPRESS) {
+        if ($this->isWordPress()) {
             if (is_array($link) && in_array($_SERVER['REQUEST_URI'], $link)) {
                 return $active;
             }
@@ -894,10 +858,10 @@ class Groomer {
     /**
      * Returns the html + head section of the site.
      * @param string $title Dynamically change the page title
-     * @param callback $cb A callback function to be executed before the function stops
+     * @param callable $cb A callback function to be executed before the function stops
      */
     public function getHead(string $title = null, callable $cb = null) {
-        if (IS_WORDPRESS) {
+        if ($this->isWordPress()) {
             if (!$this->title) {
                 $this->title = get_the_title();
             }
@@ -918,7 +882,7 @@ class Groomer {
             <meta charset="<?= $this->charset ?>" http-equiv="Content-Type" content="text/html">
             <meta http-equiv="X-UA-Compatible" content="IE=edge">
             <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-            <meta name="application-name" content="<?= APP_NAME; ?>">
+            <meta name="application-name" content="<?= $this->getAppName(); ?>">
             <meta name="mobile-web-app-capable" content="yes">
             <meta name="theme-color" content="<?= $this->getThemeColor(); ?>">
             <meta name="format-detection" content="telephone=no">
@@ -927,16 +891,16 @@ class Groomer {
             <meta name="msapplication-TileColor" content="<?= $this->getThemeColor(); ?>">
             <meta name="msapplication-TileImage" content="<?= $this->getPostImage(); ?>">
             <meta name="author" content="<?= $this->getAuthor(); ?>">
-            <?php if (!IS_WORDPRESS) : ?>
+            <?php if (!$this->isWordPress()) : ?>
                 <meta name="generator" content="<?= $this->system_name ?>">
             <?php endif; ?>
-            <meta name="canonical" href="<?= CURRENT_PAGE; ?>">
+            <meta name="canonical" href="<?= $this->getCurrentPage(); ?>">
             <?php if ($this->seo) : ?>
                 <meta name="keywords" content="<?= $this->getKeywords(); ?>">
                 <meta name="description" content="<?= $this->getDetails(); ?>">
-                <meta property="og:url" content="<?= CURRENT_PAGE; ?>">
+                <meta property="og:url" content="<?= $this->getCurrentPage(); ?>">
                 <meta property="og:locale" content="<?= str_replace("-", "_", $this->language) ?>">
-                <?php if (CURRENT_PAGE == WEBSITE_HOME . '/') : ?>
+                <?php if ($this->getCurrentPage() == $this->getWebsiteHome() . '/') : ?>
                     <meta property="og:type" content="website">
                 <?php else : ?>
                     <meta property="og:type" content="article">
@@ -945,7 +909,7 @@ class Groomer {
                 <meta property="og:description" content="<?= $this->getDetails(); ?>">
                 <meta property="og:image" content="<?= $this->getPostImage(); ?>">
                 <meta property="og:image_alt" content="<?= $this->thumbnail_alt ?>">
-                <meta property="og:site_name" content="<?= $this->sitename; ?>">
+                <meta property="og:site_name" content="<?= $this->site_name; ?>">
                 <meta property="twitter:card" content="<?= $this->tw_card ?>">
                 <meta property="twitter:title" content="<?= $this->getTitle(); ?>">
                 <meta property="twitter:description" content="<?= $this->getDetails(); ?>">
@@ -967,7 +931,7 @@ class Groomer {
             if ($this->manifest) :
                 printf("<link rel=\"manifest\" href=\"%s\">", $this->manifest);
             endif;
-            if (!IS_WORDPRESS) :
+            if (!$this->isWordPress()) :
                 foreach ($this->getStyles() as $style) {
                     $this->printStylesheets($style);
                 }
@@ -979,11 +943,8 @@ class Groomer {
                     $styles = $this->getStyles();
                     foreach ($styles as $style) :
                         $name = $style['name'] ?? uniqid('csg');
-                        if (WP_SHORTEN_ASSETS_URL) :
-                            wp_register_style(sprintf("csg-%s", $name), get_template_directory_uri() . $style['src'], $style['deps'] ?? [], $style['version'] ?? $this->version, $style['media'] ?? 'all');
-                        else :
-                            wp_register_style(sprintf("csg-%s", $name), $style['src'], $style['deps'] ?? [], $style['version'] ?? $this->version, $style['media'] ?? 'all');
-                        endif;
+                        $style['src'] = !WP_SHORTEN_ASSETS_URL ? get_template_directory_uri() . $style['src'] : $style['src'];
+                        wp_register_style(sprintf("csg-%s", $name), $style['src'], $style['deps'] ?? [], $style['version'] ?? $this->version, $style['media'] ?? 'all');
                         wp_enqueue_style(sprintf("csg-%s", $name));
                     endforeach;
                 });
@@ -1011,7 +972,7 @@ class Groomer {
     /**
      * Returns the html + head section of the site.
      * @param string $title Dynamically change the page title
-     * @param callback $cb A callback function to be executed before the function stops
+     * @param Callable $cb A callback function to be executed before the function stops
      */
     public function getMeta($title = null, $cb = null) {
         $this->getHead($title, $cb);
@@ -1028,7 +989,7 @@ class Groomer {
             return $this;
         }
         echo "<body";
-        if (IS_WORDPRESS) :
+        if ($this->isWordPress()) :
             echo ' ';
             body_class($class);
         elseif ($class) :
@@ -1134,7 +1095,7 @@ class Groomer {
         return $this->keywords;
     }
     protected function getPostImage() {
-        if (IS_WORDPRESS) {
+        if ($this->isWordPress()) {
             if (has_post_thumbnail()) {
                 $this->thumbnail_alt = the_post_thumbnail_caption();
                 return the_post_thumbnail_url();
@@ -1145,7 +1106,7 @@ class Groomer {
             }
             return $this->thumbnail;
         }
-        return WEBSITE_HOME . '/' . $this->thumbnail;
+        return $this->getWebsiteHome() . '/' . $this->thumbnail;
     }
 
     protected function addCompressionRule(string $regex, string $replacement) {
@@ -1193,7 +1154,7 @@ class Groomer {
      */
     protected function beforeFooter(array $scripts = []) {
         $this->js['footer'] = array_merge($scripts, $this->js['footer']);
-        if (!IS_WORDPRESS) {
+        if (!$this->isWordPress()) {
             foreach ($this->getScripts() as $script) {
                 if (!$script) continue;
                 $this->printScripts($script);
@@ -1212,7 +1173,7 @@ class Groomer {
             return $this;
         }
 
-        if (!IS_WORDPRESS) :
+        if (!$this->isWordPress()) :
             if (!is_array($script)) {
                 echo "<script src=\"{$script}?ver={$this->version}\" type=\"text/javascript\" defer=\"defer\"></script>";
             } else {
@@ -1243,7 +1204,7 @@ class Groomer {
                 }
                 wp_register_script(
                     sprintf("csg-%s", $name),
-                    WP_SHORTEN_ASSETS_URL ? get_template_directory_uri() . $js['src'] : $js['src'],
+                    !WP_SHORTEN_ASSETS_URL ? get_template_directory_uri() . $js['src'] : $js['src'],
                     $js['deps'] ?? [],
                     $version,
                     $js['footer'] ?? true
@@ -1263,7 +1224,7 @@ class Groomer {
             return;
         }
 
-        if (!IS_WORDPRESS) :
+        if (!$this->isWordPress()) :
             if (!is_array($style)) {
                 printf("<link rel=\"stylesheet\" type=\"text/css\"  href=\"%s?ver=%s\" media=\"all\">", $style, $this->version);
             } else {
