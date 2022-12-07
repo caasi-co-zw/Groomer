@@ -102,7 +102,7 @@ class Groomer {
      * A list of all stylesheetsURI stylesheets and their properties
      * @var array
      */
-    protected $stylesheetsURI;
+    protected $stylesheetsURI = [];
 
     /**
      * Text direction of the site
