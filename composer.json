@@ -7,7 +7,7 @@
 		"caasi",
 		"groomer",
 		"builder",
-		"framework"
+		"web-builder"
 	],
 	"autoload": {
 		"psr-4": {
