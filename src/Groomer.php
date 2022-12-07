@@ -1246,7 +1246,6 @@ class Groomer {
             '{any}' => '[^/]+',
             '{num}' => '\d+|-\d+',
         );
-        $this->seoKeywords = [];
 
         $this->thumbnailDescription = 'Our logo';
         $this->systemName = 'Caasi Groomer';
