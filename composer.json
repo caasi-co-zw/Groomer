@@ -11,7 +11,8 @@
 	],
 	"autoload": {
 		"psr-4": {
-			"Caasi\\": "src"
+			"Caasi\\": "src",
+			"Caasi\\Groomer\\Wordpress": "src\\Wordpress"
 		}
 	},
 	"authors": [

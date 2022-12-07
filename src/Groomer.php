@@ -294,16 +294,16 @@ class Groomer {
         // initialized system configurations
         foreach ($config as $key => $value) {
             switch ($key) {
-                case 'pageTitle':
+                case 'title':
                     $this->pageTitle = $value;
                     break;
-                case 'pageAuthor':
+                case 'author':
                     $this->pageAuthor = ucwords($value);
                     break;
-                case 'seoDescritpion':
+                case 'description':
                     $this->seoDescritpion = $value;
                     break;
-                case 'seoKeywords':
+                case 'keywords':
                     if (is_array($value)) {
                         $this->seoKeywords = '';
                         for ($j = 0; $j < count($value); $j++) {
@@ -325,7 +325,7 @@ class Groomer {
                         $this->fonts[] = $value;
                     }
                     break;
-                case 'stylesheetsURI':
+                case 'styles':
                     if ($value) {
                         if (is_array($value)) {
                             for ($j = 0; $j < count($value); $j++) {
@@ -336,7 +336,7 @@ class Groomer {
                         }
                     }
                     break;
-                case 'javascriptsURI':
+                case 'js':
                 case 'footer_js':
                     if (is_array($value)) {
                         for ($j = 0; $j < count($value); $j++) {
@@ -355,20 +355,20 @@ class Groomer {
                         $this->javascriptsURI['head'][] = $value;
                     }
                     break;
-                case 'pageFavicon':
+                case 'favicon':
                     $this->pageFavicon = $value;
                     break;
 
                 case 'menu':
                     $this->menu = $value;
                     break;
-                case 'headCss':
+                case 'css':
                     $this->headCss = $value;
                     break;
                 case 'robots':
                     $this->robots = $value;
                     break;
-                case 'postImage':
+                case 'image':
                     $this->postImage = $value;
                     break;
                 default:
@@ -401,8 +401,8 @@ class Groomer {
         return $this;
     }
     /**
-     * Changes the pageTitle of the page.
-     * @param string $pageTitle The new pageTitle
+     * Changes the title of the page.
+     * @param string $pageTitle The new page title
      */
     public function setTitle(string $pageTitle) {
         $this->pageTitle = $pageTitle;
@@ -777,7 +777,7 @@ class Groomer {
 
     /**
      * Returns the html + head section of the site.
-     * @param string $pageTitle Dynamically change the page pageTitle
+     * @param string $pageTitle Dynamically change the page title
      * @param callable $cb A callback function to be executed before the function stops
      */
     public function getHead(string $pageTitle = null, callable $cb = null) {
@@ -825,13 +825,13 @@ class Groomer {
                 <?php else : ?>
                     <meta property="og:type" content="article">
                 <?php endif; ?>
-                <meta property="og:pageTitle" content="<?= $this->getTitle(); ?>">
+                <meta property="og:title" content="<?= $this->getTitle(); ?>">
                 <meta property="og:description" content="<?= $this->getDetails(); ?>">
                 <meta property="og:image" content="<?= $this->getPostImage(); ?>">
                 <meta property="og:image_alt" content="<?= $this->thumbnailDescription ?>">
                 <meta property="og:siteName" content="<?= $this->siteName; ?>">
                 <meta property="twitter:card" content="<?= $this->twitterCardType ?>">
-                <meta property="twitter:pageTitle" content="<?= $this->getTitle(); ?>">
+                <meta property="twitter:title" content="<?= $this->getTitle(); ?>">
                 <meta property="twitter:description" content="<?= $this->getDetails(); ?>">
                 <?php if ($this->twitterSite) : ?>
                     <meta property="twitter:site" content="@<?= $this->twitterSite ?>">
@@ -877,7 +877,7 @@ class Groomer {
                 wp_head();
             endif;
             // @define('PG_TITLE', $this->getTitle());
-            printf("<pageTitle>%s</pageTitle>", $this->getTitle());
+            printf("<title>%s</title>", $this->getTitle());
             if ($this->headCss) :
                 printf("<headCss type=\"text/stylesheetsURI\">%s</headCss>", $this->headCss);
             endif; ?>
