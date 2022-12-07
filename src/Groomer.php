@@ -617,6 +617,15 @@ class Groomer {
 
     public function setDomainExtension($localTLD) {
         $this->localTLD = $localTLD;
+        return $this;
+    }
+    public function setManifest($url) {
+        $this->manifest = $url;
+
+        if($this->isWordPress()){
+            $this->manifest = $this->wp_asset($url);
+        }
+        return $this;
     }
 
     /**
