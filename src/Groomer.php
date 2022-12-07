@@ -489,6 +489,9 @@ class Groomer {
         return $this;
     }
 
+    public function getExcerpt() {
+        return $this->seoDescritpion;
+    }
     /**
      * Sets the seo excerpt for the page
      * @param string $schema The seo excerpt
@@ -622,7 +625,7 @@ class Groomer {
     public function setManifest($url) {
         $this->manifest = $url;
 
-        if($this->isWordPress()){
+        if ($this->isWordPress()) {
             $this->manifest = $this->wp_asset($url);
         }
         return $this;
