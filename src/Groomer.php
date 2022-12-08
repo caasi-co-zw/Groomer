@@ -45,6 +45,12 @@ class Groomer {
     private $outputBufferRegex = [];
 
     /**
+     * Enable buffer to be compressed
+     * @var bool
+     */
+    private $compressHtmlOutput = true;
+
+    /**
      * Custom route regex presets
      * @var array
      */
@@ -177,12 +183,6 @@ class Groomer {
      * @var bool
      */
     protected $translate   = false;
-
-    /**
-     * Enable buffer to be compressed
-     * @var bool
-     */
-    protected $compressHtmlOutput = true;
 
     /**
      * Custom version for your website and assets
