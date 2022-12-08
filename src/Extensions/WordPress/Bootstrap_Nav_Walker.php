@@ -1,8 +1,8 @@
 <?php
-namespace Caasi\Groomer\Wordpress;
 
-class Bootstrap_Nav_Walker extends \Walker_Nav_Menu
-{
+namespace Caasi\Extensions\WordPress;
+
+class Bootstrap_Nav_Walker extends \Walker_Nav_Menu {
 
 	/**
 	 * Starts the list before the elements are added.
@@ -15,8 +15,7 @@ class Bootstrap_Nav_Walker extends \Walker_Nav_Menu
 	 * @param int      $depth  Depth of menu item. Used for padding.
 	 * @param stdClass $args   An object of wp_nav_menu() arguments.
 	 */
-	public function start_lvl(&$output, $depth = 0, $args = array())
-	{
+	public function start_lvl(&$output, $depth = 0, $args = array()) {
 		if (isset($args->item_spacing) && 'discard' === $args->item_spacing) {
 			$t = '';
 			$n = '';
@@ -70,8 +69,7 @@ class Bootstrap_Nav_Walker extends \Walker_Nav_Menu
 	 * @param stdClass $args   An object of wp_nav_menu() arguments.
 	 * @param int      $id     Current item ID.
 	 */
-	public function start_el(&$output, $item, $depth = 0, $args = array(), $id = 0)
-	{
+	public function start_el(&$output, $item, $depth = 0, $args = array(), $id = 0) {
 		if (isset($args->item_spacing) && 'discard' === $args->item_spacing) {
 			$t = '';
 			$n = '';
@@ -300,8 +298,7 @@ class Bootstrap_Nav_Walker extends \Walker_Nav_Menu
 	 * @param array  $args              An array of arguments.
 	 * @param string $output            Used to append additional content (passed by reference).
 	 */
-	public function display_element($element, &$children_elements, $max_depth, $depth, $args, &$output)
-	{
+	public function display_element($element, &$children_elements, $max_depth, $depth, $args, &$output) {
 		if (!$element) {
 			return;
 		}
@@ -323,8 +320,7 @@ class Bootstrap_Nav_Walker extends \Walker_Nav_Menu
 	 *
 	 * @param array $args passed from the wp_nav_menu function.
 	 */
-	public static function fallback($args)
-	{
+	public static function fallback($args) {
 		if (current_user_can('edit_theme_options')) {
 
 			/* Get Arguments. */
@@ -388,8 +384,7 @@ class Bootstrap_Nav_Walker extends \Walker_Nav_Menu
 	 *
 	 * @return array  $classes         a maybe modified array of classnames.
 	 */
-	private function seporate_linkmods_and_icons_from_classes($classes, &$linkmod_classes, &$icon_classes, $depth)
-	{
+	private function seporate_linkmods_and_icons_from_classes($classes, &$linkmod_classes, &$icon_classes, $depth) {
 		// Loop through $classes array to find linkmod or icon classes.
 		foreach ($classes as $key => $class) {
 			// If any special classes are found, store the class in it's
@@ -427,8 +422,7 @@ class Bootstrap_Nav_Walker extends \Walker_Nav_Menu
 	 *
 	 * @return string                empty for default, a linkmod type string otherwise.
 	 */
-	private function get_linkmod_type($linkmod_classes = array())
-	{
+	private function get_linkmod_type($linkmod_classes = array()) {
 		$linkmod_type = '';
 		// Loop through array of linkmod classes to handle their $atts.
 		if (!empty($linkmod_classes)) {
@@ -459,8 +453,7 @@ class Bootstrap_Nav_Walker extends \Walker_Nav_Menu
 	 *
 	 * @return array                 maybe updated array of attributes for item.
 	 */
-	private function update_atts_for_linkmod_type($atts = array(), $linkmod_classes = array())
-	{
+	private function update_atts_for_linkmod_type($atts = array(), $linkmod_classes = array()) {
 		if (!empty($linkmod_classes)) {
 			foreach ($linkmod_classes as $link_class) {
 				if (!empty($link_class)) {
@@ -493,8 +486,7 @@ class Bootstrap_Nav_Walker extends \Walker_Nav_Menu
 	 * @param string $text the string of text to be wrapped in a screen reader class.
 	 * @return string      the string wrapped in a span with the class.
 	 */
-	private function wrap_for_screen_reader($text = '')
-	{
+	private function wrap_for_screen_reader($text = '') {
 		if ($text) {
 			$text = '<span class="screen-reader-text">' . $text . '</span>';
 		}
@@ -511,8 +503,7 @@ class Bootstrap_Nav_Walker extends \Walker_Nav_Menu
 	 *
 	 * @return string              a string with the openign tag for the element with attribibutes added.
 	 */
-	private function linkmod_element_open($linkmod_type, $attributes = '')
-	{
+	private function linkmod_element_open($linkmod_type, $attributes = '') {
 		$output = '';
 		if ('dropdown-item-text' === $linkmod_type) {
 			$output .= '<span class="dropdown-item-text"' . $attributes . '>';
@@ -536,8 +527,7 @@ class Bootstrap_Nav_Walker extends \Walker_Nav_Menu
 	 *
 	 * @return string              a string with the closing tag for this linkmod type.
 	 */
-	private function linkmod_element_close($linkmod_type)
-	{
+	private function linkmod_element_close($linkmod_type) {
 		$output = '';
 		if ('dropdown-header' === $linkmod_type || 'dropdown-item-text' === $linkmod_type) {
 			// For a header use a span with the .h6 class instead of a real

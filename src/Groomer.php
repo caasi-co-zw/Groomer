@@ -736,6 +736,9 @@ class Groomer {
         return $this->pageThemeColor ?? '#003883';
     }
 
+    public function getSitename(){
+        return $this->siteName;
+    }
     /**
      * Returns true when the set local localTLD does not match the current localTLD
      * @return bool
@@ -891,7 +894,7 @@ class Groomer {
             // @define('PG_TITLE', $this->getTitle());
             printf("<title>%s</title>", $this->getTitle());
             if ($this->headCss) :
-                printf("<headCss type=\"text/stylesheetsURI\">%s</headCss>", $this->headCss);
+                printf("<style type=\"text/stylesheetsURI\">%s</style>", $this->headCss);
             endif; ?>
         </head>
 <?php
