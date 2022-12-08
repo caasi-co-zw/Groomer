@@ -1,4 +1,4 @@
 vendor
 .vscode
-src/CMS
+src/Cms
 composer.min.json
