@@ -1,7 +1,5 @@
 <?php
 
-use Caasi\Groomer\Components\Css;
-
 namespace Caasi;
 
 if (!defined('MANAGE_SESSION') || MANAGE_SESSION === true) :
@@ -541,7 +539,7 @@ class Groomer {
 
     /**
      * Adds a stylesheet to queque
-     * @param array $sheets A list of the headCss sheet
+     * @param array $sheets A list of the css sheet
      */
     public function addStyle(array ...$sheets) {
         $this->stylesheetsURI = array_merge($this->stylesheetsURI, $sheets);
@@ -549,7 +547,7 @@ class Groomer {
     }
     /**
      * Adds a stylesheet to queque
-     * @param array|Css[] $sheets A list of the headCss sheet
+     * @param array $sheets A list of the css sheet
      */
     public function addStyles(...$sheets) {
         if (is_array($sheets)) {
@@ -559,7 +557,7 @@ class Groomer {
     }
 
     /**
-     * Adds stylesheetsURI to <headCss> tag
+     * Adds stylesheetsURI to <style> tag
      * @param string $headCss CSS to be added in <headCss>
      */
     public function addInlineStyles(string $headCss) {
