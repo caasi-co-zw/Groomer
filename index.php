@@ -6,7 +6,6 @@ $web
     ->setTitle('Groomer Site')
     ->setDescription('Create your website easily.')
     ->getHead()
-    ->openBody()
     ->getMenu()
     ->getHeader(); ?>
 <main>
@@ -15,4 +14,4 @@ $web
         <p>Your site is ready to be customized. Start by editing the Simple.php file in the Examples folder.<br>For more advanced features, change Simple.php to Advanced.php on line 2 in this index file.</p>
     </div>
 </main>
-<?php $web->getFooter()?>
+<?php $web->getFooter() ?>
