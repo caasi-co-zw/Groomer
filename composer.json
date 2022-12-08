@@ -10,6 +10,9 @@
 		"web-builder"
 	],
 	"autoload": {
+		"psr-0": {
+			"UnitTests": "tests/"
+		},
 		"psr-4": {
 			"Caasi\\": "src/",
 			"Caasi\\Groomer\\": "src/Groomer/"
@@ -30,8 +33,5 @@
 	"config": {
 		"sort-packages": true
 	},
-	"homepage": "https://github.com/caasi-co-zw/Groomer",
-	"require-dev": {
-		"phpunit/phpunit": "10.0.x-dev"
-	}
+	"homepage": "https://github.com/caasi-co-zw/Groomer"
 }
