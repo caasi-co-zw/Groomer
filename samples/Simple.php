@@ -1,14 +1,16 @@
 <?php
+
 use Caasi\Groomer;
-include __DIR__.'/../vendor/autoload.php';
+
+include __DIR__ . '/../vendor/autoload.php';
 
 class Webpage extends Groomer {
     public $name;
     /**
      * @var bool
      */
-    public function __construct($config = [], $cb = null) {
-        $this->sitename = 'Demo';
+    public function __construct() {
+        $this->setSitename('Demo');
         $this->addStyles(
             [
                 'src' => '/css/bootstrap.css',
@@ -28,10 +30,10 @@ class Webpage extends Groomer {
                 'footer' => false
             )
         );
-        $this->version = 1.01;
-        $this->tld = 'com';
-        parent::__construct($config, $cb);
-        $this->name = &$this->sitename;
+        parent::__construct();
+        $this->setVersion(1.01);
+        $this->setDomainExtension('com');
+        $this->name = &$this->getSitename();
     }
     public function getHeader() {
         //parent::beforeGetHeader();
@@ -40,7 +42,6 @@ class Webpage extends Groomer {
     public function getMenu() {
         //parent::beforeGetMenu();
 ?>
-
     <?php return $this;
     }
     public function getSearch() {

@@ -1,6 +1,6 @@
 <?php
 
-namespace Caasi;
+namespace Caasi\Groomer\Components;
 
 /**
  * Basic structure of a css file

@@ -1,6 +1,6 @@
 <?php
 
-namespace Caasi\Extensions\WordPress;
+namespace Caasi\Groomer\Extensions\WordPress\Bootstrap;
 
 /**
  * Custom comment walker for this theme.
@@ -33,7 +33,7 @@ class Groover_Comments extends \Walker_Comment {
 		$tag = ('div' === $args['style']) ? 'div' : 'li';
 
 ?>
-		<<?php echo $tag; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static output 
+		<<?php echo $tag; // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- static output
 			?> id="comment-<?php comment_ID(); ?>" <?php comment_class($this->has_children ? 'parent' : '', $comment); ?>>
 			<article id="div-comment-<?php comment_ID(); ?>" class="comment-body">
 				<footer class="comment-meta">

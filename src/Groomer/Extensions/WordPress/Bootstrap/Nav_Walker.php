@@ -1,6 +1,6 @@
 <?php
 
-namespace Caasi\Extensions\WordPress;
+namespace Caasi\Groomer\Extensions\WordPress\Bootstrap;
 
 class Bootstrap_Nav_Walker extends \Walker_Nav_Menu {
 

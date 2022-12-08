@@ -1,5 +1,7 @@
 <?php
 
+use Caasi\Groomer\Components\Css;
+
 namespace Caasi;
 
 if (!defined('MANAGE_SESSION') || MANAGE_SESSION === true) :
@@ -188,7 +190,7 @@ class Groomer {
      * Custom version for your website and assets
      * @var string
      */
-    protected $version;
+    private $version;
 
     /**
      * URL to the manifest of the site
@@ -736,8 +738,19 @@ class Groomer {
         return $this->pageThemeColor ?? '#003883';
     }
 
-    public function getSitename(){
+    public function setSitename($sitename) {
+        $this->siteName = $sitename;
+        return $this;
+    }
+    public function getSitename() {
         return $this->siteName;
+    }
+    public function setVersion($version) {
+        $this->version = $version;
+        return $this;
+    }
+    public function getVersion() {
+        return $this->version;
     }
     /**
      * Returns true when the set local localTLD does not match the current localTLD
@@ -983,12 +996,7 @@ class Groomer {
      */
     protected function getScripts(int $index = null, bool $footer = true) {
         $type = $footer ? 'footer' : 'head';
-
-        if (null === $index) {
-            return $this->javascriptsURI[$type];
-        } else {
-            return $this->javascriptsURI[$type][$index];
-        }
+        return ($index === null) ? $this->javascriptsURI[$type] : $this->javascriptsURI[$type][$index];
     }
 
     /**
