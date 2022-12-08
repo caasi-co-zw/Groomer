@@ -188,7 +188,7 @@ class Groomer {
      * Custom version for your website and assets
      * @var string
      */
-    private $version;
+    private $version = '1.0';
 
     /**
      * URL to the manifest of the site
@@ -612,16 +612,28 @@ class Groomer {
     /**
      * Change robots rules for page(s)
      * @param string $val New rule
+     * @return Groomer
      */
     public function setRobots(string $val) {
         $this->robots = $val;
         return $this;
     }
 
+    /**
+     * Configure a custom domain name for your localhost site.
+     * @param string $localTLD
+     * @return Groomer
+     */
     public function setDomainExtension($localTLD) {
         $this->localTLD = $localTLD;
         return $this;
     }
+
+    /**
+     * Sets the manifest url
+     * @param string $url
+     * @return Groomer
+     */
     public function setManifest($url) {
         $this->manifest = $url;
 
@@ -638,7 +650,6 @@ class Groomer {
     public function isWordPress() {
         return class_exists('WP');
     }
-
 
     /**
      * Server name in this format caasi.co.zw
@@ -736,17 +747,37 @@ class Groomer {
         return $this->pageThemeColor ?? '#003883';
     }
 
+    /**
+     * Sets a new site name
+     * @param string $sitename
+     * @return Groomer
+     */
     public function setSitename($sitename) {
         $this->siteName = $sitename;
         return $this;
     }
+    /**
+     * Returns the set site name
+     * @return string|null
+     */
     public function getSitename() {
         return $this->siteName;
     }
+
+    /**
+     * Sets the version controll number for your assets.
+     * @param string|int $version
+     * @return Groomer
+     */
     public function setVersion($version) {
         $this->version = $version;
         return $this;
     }
+
+    /**
+     * Returns the set version number
+     * @return string|null
+     */
     public function getVersion() {
         return $this->version;
     }
@@ -806,7 +837,7 @@ class Groomer {
      * @param string $pageTitle Dynamically change the page title
      * @param callable $cb A callback function to be executed before the function stops
      */
-    public function getHead(string $pageTitle = null, callable $cb = null) {
+    final public function getHead(string $pageTitle = null, callable $cb = null) {
         if ($this->isWordPress()) {
             if (!$this->pageTitle) {
                 $this->pageTitle = get_the_title();
@@ -920,7 +951,7 @@ class Groomer {
      * @param string $pageTitle Dynamically change the page pageTitle
      * @param Callable $cb A callback function to be executed before the function stops
      */
-    public function getMeta($pageTitle = null, $cb = null) {
+    final public function getMeta($pageTitle = null, $cb = null) {
         $this->getHead($pageTitle, $cb);
         return $this;
     }
@@ -930,7 +961,7 @@ class Groomer {
      * @param string $class Body class
      * @param string $args Additional arguments to be added
      */
-    public function openBody($class = null, $args = null) {
+    final public function openBody($class = null, $args = null) {
         if ($this->pageBodyOpened) {
             return $this;
         }
@@ -970,7 +1001,7 @@ class Groomer {
      * @param string $url The short asset url eg. /img/file.png
      * @return string
      */
-    public static function wp_asset(string $url) {
+    final public static function wp_asset(string $url) {
         return get_template_directory_uri() . $url;
     }
 
@@ -992,7 +1023,7 @@ class Groomer {
      * @param bool $footer [optional] returns a script from that index
      * @return array
      */
-    protected function getScripts(int $index = null, bool $footer = true) {
+    final protected function getScripts(int $index = null, bool $footer = true) {
         $type = $footer ? 'footer' : 'head';
         return ($index === null) ? $this->javascriptsURI[$type] : $this->javascriptsURI[$type][$index];
     }
@@ -1060,7 +1091,7 @@ class Groomer {
      * Compresses the html to be out-puted
      * @var string
      */
-    protected final function _compressOutput($buffer) {
+    final protected function _compressOutput($buffer) {
         $buffer = preg_replace($this->outputBufferRegex['replace'], $this->outputBufferRegex['with'], $buffer);
         return $buffer;
     }
@@ -1070,7 +1101,7 @@ class Groomer {
      *
      * This function must be called just before the header tag if it's in a function.
      */
-    protected function beforeHeader() {
+    final protected function beforeHeader() {
         if (!$this->pageBodyOpened) {
             $this->openBody();
         }
@@ -1082,7 +1113,7 @@ class Groomer {
      *
      * Must be the first thing in a getMenu() function
      */
-    protected function beforeMenu() {
+    final protected function beforeMenu() {
         if (!$this->pageBodyOpened) {
             $this->openBody();
         }
@@ -1093,7 +1124,7 @@ class Groomer {
      * Prints the html markup (static by default) of the website footer.
      * @param array $scripts An array of footer scripts.
      */
-    protected function beforeFooter(array $scripts = []) {
+    final protected function beforeFooter(array $scripts = []) {
         $this->javascriptsURI['footer'] = array_merge($scripts, $this->javascriptsURI['footer']);
         if (!$this->isWordPress()) {
             foreach ($this->getScripts() as $script) {
@@ -1109,7 +1140,7 @@ class Groomer {
      * Enqueues a script for printing
      * @param array|string $script The javascript files property
      */
-    protected function printScripts($script) {
+    final protected function printScripts($script) {
         if (!$script || empty($script)) {
             return $this;
         }
@@ -1160,7 +1191,7 @@ class Groomer {
      * Enqueues a headCss for printing
      * @param string $headCss The stylesheet file property
      */
-    protected function printStylesheets($headCss) {
+    final protected function printStylesheets($headCss) {
         if (!$headCss) {
             return;
         }
@@ -1206,7 +1237,7 @@ class Groomer {
      * Links a font asynchronously from google servers
      * @param string $font The name of the font
      */
-    protected function printFonts($font) {
+    final protected function printFonts($font) {
         if (is_array($font)) {
             $font_name = $font['name'];
             $html = sprintf("<link rel=\"preconnect\" href=\"%s\" crossorigin>", $font['preconnect'] ?? '//fonts.gstatic.com');
