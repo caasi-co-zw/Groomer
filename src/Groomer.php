@@ -936,7 +936,7 @@ class Groomer {
             // @define('PG_TITLE', $this->getTitle());
             printf("<title>%s</title>", $this->getTitle());
             if ($this->headCss) :
-                printf("<style type=\"text/stylesheetsURI\">%s</style>", $this->headCss);
+                printf("<style type=\"text/css\">%s</style>", $this->headCss);
             endif; ?>
         </head>
 <?php
@@ -1198,7 +1198,7 @@ class Groomer {
 
         if (!$this->isWordPress()) :
             if (!is_array($headCss)) {
-                printf("<link rel=\"stylesheet\" type=\"text/stylesheetsURI\"  href=\"%s?ver=%s\" media=\"all\">", $headCss, $this->version);
+                printf("<link rel=\"stylesheet\" type=\"text/css\"  href=\"%s?ver=%s\" media=\"all\">", $headCss, $this->version);
             } else {
                 if (!isset($headCss['href'])) {
                     $headCss['href'] = $headCss['src'];
@@ -1210,7 +1210,7 @@ class Groomer {
                 if ($async) :
                     $stylesheetsURI .= sprintf("rel=\"preload\" href=\"%s", $headCss['href']);
                 else :
-                    $stylesheetsURI .= sprintf("rel=\"stylesheet\" type=\"text/stylesheetsURI\"  href=\"%s", $headCss['href'], $this->version);
+                    $stylesheetsURI .= sprintf("rel=\"stylesheet\" type=\"text/css\"  href=\"%s", $headCss['href'], $this->version);
                 endif;
                 if ($version) :
                     $stylesheetsURI .= sprintf("?ver=%s\" ", isset($headCss['version']) ? $headCss['version'] : $this->version);
@@ -1218,7 +1218,7 @@ class Groomer {
                     $stylesheetsURI .= sprintf("\" ");
                 endif;
                 if ($async) :
-                    $stylesheetsURI .= 'as="headCss" onload="this.onload=null;this.rel=\'stylesheet\'">';
+                    $stylesheetsURI .= 'as="css" onload="this.onload=null;this.rel=\'stylesheet\'">';
                     $stylesheetsURI .= sprintf("<noscript><link rel=\"stylesheet\" href=\"%s", $headCss['href']);
                     if ($version) :
                         $stylesheetsURI .= sprintf("?ver=%s", $this->version);
@@ -1241,8 +1241,8 @@ class Groomer {
         if (is_array($font)) {
             $font_name = $font['name'];
             $html = sprintf("<link rel=\"preconnect\" href=\"%s\" crossorigin>", $font['preconnect'] ?? '//fonts.gstatic.com');
-            $html .= sprintf("<link rel=\"preload\" as=\"headCss\" href=\"//fonts.googleapis.com/css2?family=%s&display=%s\">", $font_name, $font['display'] ?? 'swap');
-            $html .= sprintf("<link rel=\"stylesheet preload prefetch\" href=\"//fonts.googleapis.com/stylesheetsURI?family=%s:%s\">", $font_name, $font['weight'] ?? '400');
+            $html .= sprintf("<link rel=\"preload\" as=\"css\" href=\"//fonts.googleapis.com/css2?family=%s&display=%s\">", $font_name, $font['display'] ?? 'swap');
+            $html .= sprintf("<link rel=\"stylesheet preload prefetch\" href=\"//fonts.googleapis.com/css?family=%s:%s\">", $font_name, $font['weight'] ?? '400');
             print($html);
         }
         return $this;
