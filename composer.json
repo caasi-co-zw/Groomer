@@ -11,7 +11,8 @@
 	],
 	"autoload": {
 		"psr-4": {
-			"Caasi\\Groomer\\": "src/"
+			"Caasi\\": "src/",
+			"Caasi\\Groomer\\": "src/Groomer/"
 		}
 	},
 	"authors": [
