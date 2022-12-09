@@ -1218,7 +1218,7 @@ class Groomer {
                     $stylesheetsURI .= sprintf("\" ");
                 endif;
                 if ($async) :
-                    $stylesheetsURI .= 'as="css" onload="this.onload=null;this.rel=\'stylesheet\'">';
+                    $stylesheetsURI .= 'as="style" onload="this.onload=null;this.rel=\'stylesheet\'">';
                     $stylesheetsURI .= sprintf("<noscript><link rel=\"stylesheet\" href=\"%s", $headCss['href']);
                     if ($version) :
                         $stylesheetsURI .= sprintf("?ver=%s", $this->version);
