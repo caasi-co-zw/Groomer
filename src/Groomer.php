@@ -56,6 +56,7 @@ class Groomer {
      */
     private $pageRouteRegexPresets = [];
 
+    private $requiredFonts = [];
     /**
      * The page title
      * @var string
