@@ -864,7 +864,7 @@ class Groomer {
             <meta name="theme-color" content="<?= $this->getThemeColor(); ?>">
             <meta name="format-detection" content="telephone=no">
             <meta name="apple-mobile-web-app-capable" content="yes">
-            <meta name="apple-mobile-web-app-status-bar-headCss" content="<?= $this->getThemeColor(); ?>">
+            <meta name="apple-mobile-web-app-status-bar-style" content="<?= $this->getThemeColor(); ?>">
             <meta name="msapplication-TileColor" content="<?= $this->getThemeColor(); ?>">
             <meta name="msapplication-TileImage" content="<?= $this->getPostImage(); ?>">
             <meta name="pageAuthor" content="<?= $this->getAuthor(); ?>">
