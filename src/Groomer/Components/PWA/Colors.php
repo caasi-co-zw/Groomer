@@ -9,7 +9,8 @@ namespace Caasi\Groomer\Components\PWA;
  * @version 1.0.0
  */
 class Colors {
-    private $color;
+    private $lightColor;
+    private $darkColor;
     
     public function setColor(string $color) {
         $this->color = $color;
