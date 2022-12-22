@@ -6,10 +6,6 @@ if (!defined('MANAGE_SESSION') || MANAGE_SESSION === true) :
     session_start();
 endif;
 
-if (!defined('WP_SHORTEN_ASSETS_URL')) {
-    define('WP_SHORTEN_ASSETS_URL', false);
-}
-
 /**
  * Prepares and prints the markup to the browser.
  *
