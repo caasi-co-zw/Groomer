@@ -268,7 +268,7 @@ class Groomer {
 
             // meta data
             $this->pageTextDirection = is_rtl() ? 'rtl' : 'ltr';
-            $this->pageCharset = get_bloginfo('pageCharset');
+            $this->pageCharset = get_bloginfo('charset');
             $this->version = $this->theme->get('Version');
             $this->pageLanguage = get_bloginfo('pageLanguage');
 
@@ -853,7 +853,7 @@ class Groomer {
         <html lang="<?= $this->pageLanguage ?>" dir="<?= $this->pageTextDirection ?>">
 
         <head>
-            <meta pageCharset="<?= $this->pageCharset ?>" http-equiv="Content-Type" content="text/html">
+            <meta charset="<?= $this->pageCharset ?>" http-equiv="Content-Type" content="text/html">
             <meta http-equiv="X-UA-Compatible" content="IE=edge">
             <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
             <meta name="application-name" content="<?= $this->getAppName(); ?>">
