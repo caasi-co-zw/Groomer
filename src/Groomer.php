@@ -870,7 +870,7 @@ class Groomer {
             <?php endif; ?>
             <meta name="canonical" href="<?= $this->getCurrentPage(); ?>">
             <?php if ($this->seo) : ?>
-                <meta name="seoKeywords" content="<?= $this->getKeywords(); ?>">
+                <meta name="keywords" content="<?= $this->getKeywords(); ?>">
                 <meta name="description" content="<?= $this->getDetails(); ?>">
                 <meta property="og:url" content="<?= $this->getCurrentPage(); ?>">
                 <meta property="og:locale" content="<?= str_replace("-", "_", $this->pageLanguage) ?>">
