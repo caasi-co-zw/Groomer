@@ -864,7 +864,7 @@ class Groomer {
             <meta name="apple-mobile-web-app-status-bar-style" content="<?= $this->getThemeColor(); ?>">
             <meta name="msapplication-TileColor" content="<?= $this->getThemeColor(); ?>">
             <meta name="msapplication-TileImage" content="<?= $this->getPostImage(); ?>">
-            <meta name="pageAuthor" content="<?= $this->getAuthor(); ?>">
+            <meta name="author" content="<?= $this->getAuthor(); ?>">
             <?php if (!$this->isWordPress()) : ?>
                 <meta name="generator" content="<?= $this->systemName ?>">
             <?php endif; ?>
