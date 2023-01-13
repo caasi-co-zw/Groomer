@@ -1075,6 +1075,9 @@ class Groomer {
             }
             return $this->pageThumbnail;
         }
+        if($this->pageThumbnail[0] == '/'){
+            return $this->getWebsiteHome() . $this->pageThumbnail;
+        }
         return $this->getWebsiteHome() . '/' . $this->pageThumbnail;
     }
 
