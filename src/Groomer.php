@@ -407,7 +407,7 @@ class Groomer {
     }
 
     /**
-     * Changes the page pageAuthor
+     * Changes the page page author name
      * @param string $pageAuthor Author name
      */
     public function setAuthor(string $pageAuthor) {
@@ -721,7 +721,7 @@ class Groomer {
     }
 
     /**
-     * Returns the document pageAuthor
+     * Returns the document page author
      * @return string
      */
     public function getAuthor() {
