@@ -856,7 +856,7 @@ class Groomer {
         <head>
             <meta charset="<?= $this->pageCharset ?>" http-equiv="Content-Type" content="text/html">
             <meta http-equiv="X-UA-Compatible" content="IE=edge">
-            <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+            <?= new Meta('viewport','width=device-width, initial-scale=1, shrink-to-fit=no') ;?>
             <meta name="application-name" content="<?= $this->getAppName(); ?>">
             <meta name="mobile-web-app-capable" content="yes">
             <meta name="theme-color" content="<?= $this->getThemeColor(); ?>">
