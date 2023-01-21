@@ -1,6 +1,7 @@
 <?php
 
 namespace Caasi;
+use Caasi/Groomer/Components;
 
 if (!defined('MANAGE_SESSION') || MANAGE_SESSION === true) :
     session_start();
@@ -917,7 +918,7 @@ class Groomer {
                     $styles = $this->getStyles();
                     foreach ($styles as $headCss) :
                         $name = $headCss['name'] ?? uniqid('csg');
-                        $headCss['src'] = !WP_SHORTEN_ASSETS_URL ? get_template_directory_uri() . $headCss['src'] : $headCss['src'];
+                        $headCss['src'] = get_template_directory_uri() . $headCss['src'];
                         wp_register_style(sprintf("csg-%s", $name), $headCss['src'], $headCss['deps'] ?? [], $headCss['version'] ?? $this->version, $headCss['media'] ?? 'all');
                         wp_enqueue_style(sprintf("csg-%s", $name));
                     endforeach;
@@ -1176,7 +1177,7 @@ class Groomer {
                 }
                 wp_register_script(
                     sprintf("csg-%s", $name),
-                    !WP_SHORTEN_ASSETS_URL ? get_template_directory_uri() . $javascriptsURI['src'] : $javascriptsURI['src'],
+                    get_template_directory_uri() . $javascriptsURI['src'],
                     $javascriptsURI['deps'] ?? [],
                     $version,
                     $javascriptsURI['footer'] ?? true

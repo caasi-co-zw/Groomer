@@ -1,6 +1,6 @@
 <?php
 
-namespace Caasi\Cms;
+namespace Caasi\Groomer\Cms;
 
 if (!defined('WP_SHORTEN_ASSETS_URL')) {
     define('WP_SHORTEN_ASSETS_URL', false);
