@@ -8,20 +8,33 @@ namespace Caasi\Groomer\Components;
  * @link https://github.com/caasi-co-zw/groomer
  * @version 1.0.0
  */
-class Meta {
-    private $name;
-    private $property;
-    private $content;
+class Meta
+{
+    const NAME = 'name';
+    const HREF = 'href';
+    const CONTENT = 'content';
+    const PROPERTY = 'property';
+    const HTTP_EQUIV = 'http-equiv';
+    private $results = '';
 
-    public function __construct($name,$content) {
-        $this->name = $name;
-        $this->content = $content;
-        $this->property = 'name';
+    /**
+     * Pass in a list of keys and their values.
+     */
+    public function __construct(...$values)
+    {
+        $keys = $strings = ' ';
+        foreach ($values as $value) :
+            if (is_string($value)) :
+                $strings .= sprintf(' %s', $value);
+            elseif (is_array($value)) :
+                $keys .= sprintf(' %s="%s"', $value[0], $value[1]);
+            endif;
+        endforeach;
+        $this->results = $keys . $strings;
+        print($this->__toString());
     }
-    public function setProperty(bool $enable){
-        $this->property = $enable ? 'property' : 'name';
-    }
-    public function __toString(){
-        return sprintf('<meta %s="%s" content="%s">',$this->property,$this->name,$this->content);
+    public function __toString()
+    {
+        return sprintf('<meta %s>', $this->results);
     }
 }
