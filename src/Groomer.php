@@ -1,7 +1,9 @@
 <?php
 
 namespace Caasi;
-use Caasi\Groomer\Components;
+
+use Caasi\Groomer\Components\Css;
+use Caasi\Groomer\Components\Meta;
 
 if (!defined('MANAGE_SESSION') || MANAGE_SESSION === true) :
     session_start();
@@ -17,7 +19,8 @@ endif;
  * @version 1.1
  * @license GPL-3.0+ http://www.gnu.org/licenses/gpl-3.0.txt
  */
-class Groomer {
+class Groomer
+{
     /**
      * The system name
      * @var string
@@ -54,6 +57,8 @@ class Groomer {
     private $pageRouteRegexPresets = [];
 
     private $requiredFonts = [];
+    private $metaTags = [];
+    private $linkTags = [];
     /**
      * The page title
      * @var string
@@ -249,7 +254,8 @@ class Groomer {
      */
     public $siteName;
 
-    public function __construct(array $config = [], $callback = null) {
+    public function __construct(array $config = [], $callback = null)
+    {
         // init default values
         $this->__initializeDefaults();
 
@@ -394,7 +400,8 @@ class Groomer {
      * Enable or disable html compression on output.
      * @param bool $enabled
      */
-    public function compressOutput($enabled) {
+    public function compressOutput($enabled)
+    {
         $this->compressHtmlOutput = $enabled;
         return $this;
     }
@@ -402,7 +409,8 @@ class Groomer {
      * Changes the title of the page.
      * @param string $pageTitle The new page title
      */
-    public function setTitle(string $pageTitle) {
+    public function setTitle(string $pageTitle)
+    {
         $this->pageTitle = $pageTitle;
         return $this;
     }
@@ -411,7 +419,8 @@ class Groomer {
      * Changes the page page author name
      * @param string $pageAuthor Author name
      */
-    public function setAuthor(string $pageAuthor) {
+    public function setAuthor(string $pageAuthor)
+    {
         $this->pageAuthor = $pageAuthor;
         return $this;
     }
@@ -420,7 +429,8 @@ class Groomer {
      * Sets the twitter owner of the site
      * @param string $username Site username
      */
-    public function setTwitterSite(string $username) {
+    public function setTwitterSite(string $username)
+    {
         $this->twitterSite = $username;
         return $this;
     }
@@ -429,7 +439,8 @@ class Groomer {
      * Sets a theme color for the web app
      * @param string $color A hex color
      */
-    public function setThemeColor(string $color) {
+    public function setThemeColor(string $color)
+    {
         $this->pageThemeColor = $color;
         return $this;
     }
@@ -438,7 +449,8 @@ class Groomer {
      * Sets the schema json for the page
      * @param string $schema The schema.org json
      */
-    public function setSchema($schema) {
+    public function setSchema($schema)
+    {
         $this->schema = $schema;
         return $this;
     }
@@ -447,7 +459,8 @@ class Groomer {
      * Prepends the new seo seoKeywords for the page
      * @param string|array $schema The seo seoKeywords
      */
-    public function addKeywords($seoKeywords) {
+    public function addKeywords($seoKeywords)
+    {
         if (is_array($seoKeywords)) :
             $this->seoKeywords = array_merge($this->seoKeywords, $seoKeywords);
         else :
@@ -460,7 +473,8 @@ class Groomer {
      * Sets the new (overrides any existsing) seo seoKeywords for the page
      * @param string|array $schema The seo seoKeywords
      */
-    public function setKeywords($seoKeywords) {
+    public function setKeywords($seoKeywords)
+    {
         if (is_array($seoKeywords)) :
             $this->seoKeywords = $seoKeywords;
         else :
@@ -473,7 +487,8 @@ class Groomer {
      * Sets the page pageThumbnail
      * @param string $schema The pageThumbnail url
      */
-    public function setPostImage($img) {
+    public function setPostImage($img)
+    {
         $this->pageThumbnail = $img;
         return $this;
     }
@@ -482,19 +497,22 @@ class Groomer {
      * Sets the seo excerpt for the page
      * @param string $schema The seo excerpt
      */
-    public function setExcerpt(string $excerpt) {
+    public function setExcerpt(string $excerpt)
+    {
         $this->seoDescritpion = $excerpt;
         return $this;
     }
 
-    public function getExcerpt() {
+    public function getExcerpt()
+    {
         return $this->seoDescritpion;
     }
     /**
      * Sets the seo excerpt for the page
      * @param string $schema The seo excerpt
      */
-    public function setDetails(string $excerpt) {
+    public function setDetails(string $excerpt)
+    {
         $this->seoDescritpion = $excerpt;
         return $this;
     }
@@ -503,7 +521,8 @@ class Groomer {
      * Sets the seo excerpt for the page
      * @param string $schema The seo excerpt
      */
-    public function setDescription(string $excerpt) {
+    public function setDescription(string $excerpt)
+    {
         $this->seoDescritpion = $excerpt;
         return $this;
     }
@@ -512,7 +531,8 @@ class Groomer {
      * Set the website pageLanguage
      * @var string
      */
-    public function setLanguage(string $pageLanguage) {
+    public function setLanguage(string $pageLanguage)
+    {
         $this->pageLanguage = $pageLanguage;
         return $this;
     }
@@ -521,7 +541,8 @@ class Groomer {
      * Enable or disable SEO
      * @param bool $seo Enables or disables SEO
      */
-    public function setSeo(bool $seo) {
+    public function setSeo(bool $seo)
+    {
         $this->seo = $seo;
         return $this;
     }
@@ -530,7 +551,8 @@ class Groomer {
      * Set the pageFavicon url
      * @param string $url Url of the pageFavicon
      */
-    public function setFavicon(string $url) {
+    public function setFavicon(string $url)
+    {
         $this->pageFavicon = $url;
         return $this;
     }
@@ -539,7 +561,8 @@ class Groomer {
      * Adds a stylesheet to queque
      * @param array $sheets A list of the css sheet
      */
-    public function addStyle(array ...$sheets) {
+    public function addStyle(array ...$sheets)
+    {
         $this->stylesheetsURI = array_merge($this->stylesheetsURI, $sheets);
         return $this;
     }
@@ -547,7 +570,8 @@ class Groomer {
      * Adds a stylesheet to queque
      * @param array $sheets A list of the css sheet
      */
-    public function addStyles(...$sheets) {
+    public function addStyles(...$sheets)
+    {
         if (is_array($sheets)) {
             $this->stylesheetsURI = array_merge($this->stylesheetsURI, $sheets);
         }
@@ -558,7 +582,8 @@ class Groomer {
      * Adds stylesheetsURI to <style> tag
      * @param string $headCss CSS to be added in <headCss>
      */
-    public function addInlineStyles(string $headCss) {
+    public function addInlineStyles(string $headCss)
+    {
         if (!$this->headCss) {
             $this->headCss = $headCss;
         } else {
@@ -571,7 +596,8 @@ class Groomer {
      * Adds a javascript file to queque
      * @param array $scripts A list of the scripts
      */
-    public function addScripts(array ...$scripts) {
+    public function addScripts(array ...$scripts)
+    {
         $head  = array();
         $footer = array();
 
@@ -593,7 +619,8 @@ class Groomer {
      * Add asyncronous google fonts to your website.
      * @param array $fonts A list of fonts, each enclosed in an array.
      */
-    public function setFonts(array ...$fonts) {
+    public function setFonts(array ...$fonts)
+    {
         $this->fonts = array_merge($this->fonts, $fonts);
         return $this;
     }
@@ -602,7 +629,8 @@ class Groomer {
      * Add asyncronous google fonts to your website.
      * @param array $fonts A list of fonts, each enclosed in an array.
      */
-    public function addFonts(array ...$fonts) {
+    public function addFonts(array ...$fonts)
+    {
         $this->setFonts($fonts);
         return $this;
     }
@@ -612,7 +640,8 @@ class Groomer {
      * @param string $val New rule
      * @return Groomer
      */
-    public function setRobots(string $val) {
+    public function setRobots(string $val)
+    {
         $this->robots = $val;
         return $this;
     }
@@ -622,7 +651,8 @@ class Groomer {
      * @param string $localTLD
      * @return Groomer
      */
-    public function setDomainExtension($localTLD) {
+    public function setDomainExtension($localTLD)
+    {
         $this->localTLD = $localTLD;
         return $this;
     }
@@ -632,7 +662,8 @@ class Groomer {
      * @param string $url
      * @return Groomer
      */
-    public function setManifest($url) {
+    public function setManifest($url)
+    {
         $this->manifest = $url;
 
         if ($this->isWordPress()) {
@@ -645,7 +676,8 @@ class Groomer {
      * Returns true if installed on WordPress CMS
      * @return bool
      */
-    public function isWordPress() {
+    public function isWordPress()
+    {
         return class_exists('WP');
     }
 
@@ -653,7 +685,8 @@ class Groomer {
      * Server name in this format caasi.co.zw
      * @return string
      */
-    public function getServerName() {
+    public function getServerName()
+    {
         return $_SERVER['SERVER_NAME'];
     }
 
@@ -661,7 +694,8 @@ class Groomer {
      * Returns the domain name
      * @return string
      */
-    public function getAppName() {
+    public function getAppName()
+    {
         return explode('.', $this->getServerName())[0];
     }
 
@@ -669,14 +703,16 @@ class Groomer {
      * Homepage url of the site in this format https://caasi.co.zw/
      * @return string
      */
-    public function getWebsiteHome() {
+    public function getWebsiteHome()
+    {
         return (($this->onSecureConnection() ? 'https://' : 'http://') . $this->getServerName());
     }
 
     /**
      * Returns the TLD for the site
      */
-    public function getCurrentTLD() {
+    public function getCurrentTLD()
+    {
         $site = explode('.', $this->getServerName());
         return $this->localTLD = end($site);
     }
@@ -684,7 +720,8 @@ class Groomer {
      * Returns true if the page is on https
      * @return bool
      */
-    public function onSecureConnection() {
+    public function onSecureConnection()
+    {
         $ssl = $_SERVER['HTTPS'] ?? null;
         return $ssl === "on";
     }
@@ -693,7 +730,8 @@ class Groomer {
      * Returns the current opened page url in this format https://caasi.co.zw/websites/
      * @return string
      */
-    public function getCurrentPage() {
+    public function getCurrentPage()
+    {
         return $this->getWebsiteHome() . $_SERVER['REQUEST_URI'];
     }
 
@@ -702,7 +740,8 @@ class Groomer {
      * @return string
      * @var string
      */
-    public function getTitle() {
+    public function getTitle()
+    {
         if (!$this->isWordPress()) {
             return $this->pageTitle . " " . html_entity_decode("&ndash;") . " " . $this->siteName;
         }
@@ -714,7 +753,8 @@ class Groomer {
      * @return string
      * @var string
      */
-    public function getDetails() {
+    public function getDetails()
+    {
         if ($this->isWordPress()) {
             return empty($this->seoDescritpion) ? get_the_excerpt() : $this->seoDescritpion;
         }
@@ -725,7 +765,8 @@ class Groomer {
      * Returns the document page author
      * @return string
      */
-    public function getAuthor() {
+    public function getAuthor()
+    {
         return $this->pageAuthor;
     }
 
@@ -733,7 +774,8 @@ class Groomer {
      * Returns the url of the site pageFavicon
      * @return string
      */
-    public function getFavicon() {
+    public function getFavicon()
+    {
         return $this->pageFavicon;
     }
 
@@ -741,7 +783,8 @@ class Groomer {
      * Returns the theme color of the app
      * @return string
      */
-    public function getThemeColor() {
+    public function getThemeColor()
+    {
         return $this->pageThemeColor ?? '#003883';
     }
 
@@ -750,7 +793,8 @@ class Groomer {
      * @param string $sitename
      * @return Groomer
      */
-    public function setSitename($sitename) {
+    public function setSitename($sitename)
+    {
         $this->siteName = $sitename;
         return $this;
     }
@@ -758,7 +802,8 @@ class Groomer {
      * Returns the set site name
      * @return string|null
      */
-    public function getSitename() {
+    public function getSitename()
+    {
         return $this->siteName;
     }
 
@@ -767,7 +812,8 @@ class Groomer {
      * @param string|int $version
      * @return Groomer
      */
-    public function setVersion($version) {
+    public function setVersion($version)
+    {
         $this->version = $version;
         return $this;
     }
@@ -776,14 +822,16 @@ class Groomer {
      * Returns the set version number
      * @return string|null
      */
-    public function getVersion() {
+    public function getVersion()
+    {
         return $this->version;
     }
     /**
      * Returns true when the set local localTLD does not match the current localTLD
      * @return bool
      */
-    public function isProductionServer() {
+    public function isProductionServer()
+    {
         $server_tld = explode('.', $this->getServerName());
         $server_tld = end($server_tld);
         return strtolower($server_tld) !== strtolower($this->localTLD);
@@ -793,14 +841,16 @@ class Groomer {
      * Returns true if running on a local server
      * @return bool
      */
-    public function isTestingServer() {
+    public function isTestingServer()
+    {
         return !$this->isProductionServer();
     }
 
     /**
      * Enables or disables google translating the site
      */
-    public function allowTranslating(bool $trans) {
+    public function allowTranslating(bool $trans)
+    {
         $this->translate = $trans;
         return $this;
     }
@@ -811,7 +861,8 @@ class Groomer {
      * @param string $active The text to return when url matches
      * @return string
      */
-    public function active($link, string $active = 'active') {
+    public function active($link, string $active = 'active')
+    {
         if ($this->isWordPress()) {
             if (is_array($link) && in_array($_SERVER['REQUEST_URI'], $link)) {
                 return $active;
@@ -835,7 +886,8 @@ class Groomer {
      * @param string $pageTitle Dynamically change the page title
      * @param callable $cb A callback function to be executed before the function stops
      */
-    final public function getHead(string $pageTitle = null, callable $cb = null) {
+    final public function getHead(string $pageTitle = null, callable $cb = null)
+    {
         if ($this->isWordPress()) {
             if (!$this->pageTitle) {
                 $this->pageTitle = get_the_title();
@@ -854,32 +906,30 @@ class Groomer {
         <html lang="<?= $this->pageLanguage ?>" dir="<?= $this->pageTextDirection ?>">
 
         <head>
-            <meta charset="<?= $this->pageCharset ?>" http-equiv="Content-Type" content="text/html">
-            <meta http-equiv="X-UA-Compatible" content="IE=edge">
-            <?= new Meta('viewport','width=device-width, initial-scale=1, shrink-to-fit=no') ;?>
-            <meta name="application-name" content="<?= $this->getAppName(); ?>">
-            <meta name="mobile-web-app-capable" content="yes">
-            <meta name="theme-color" content="<?= $this->getThemeColor(); ?>">
-            <meta name="format-detection" content="telephone=no">
-            <meta name="apple-mobile-web-app-capable" content="yes">
-            <meta name="apple-mobile-web-app-status-bar-style" content="<?= $this->getThemeColor(); ?>">
-            <meta name="msapplication-TileColor" content="<?= $this->getThemeColor(); ?>">
-            <meta name="msapplication-TileImage" content="<?= $this->getPostImage(); ?>">
-            <meta name="author" content="<?= $this->getAuthor(); ?>">
-            <?php if (!$this->isWordPress()) : ?>
-                <meta name="generator" content="<?= $this->systemName ?>">
-            <?php endif; ?>
-            <meta name="canonical" href="<?= $this->getCurrentPage(); ?>">
-            <?php if ($this->seo) : ?>
-                <meta name="keywords" content="<?= $this->getKeywords(); ?>">
-                <meta name="description" content="<?= $this->getDetails(); ?>">
-                <meta property="og:url" content="<?= $this->getCurrentPage(); ?>">
-                <meta property="og:locale" content="<?= str_replace("-", "_", $this->pageLanguage) ?>">
-                <?php if ($this->getCurrentPage() == $this->getWebsiteHome() . '/') : ?>
-                    <meta property="og:type" content="website">
-                <?php else : ?>
-                    <meta property="og:type" content="article">
-                <?php endif; ?>
+            <?php
+            new Meta([Meta::NAME, 'charset'], [Meta::CONTENT, $this->pageCharset]);
+            new Meta([Meta::HTTP_EQUIV, 'Content-Type'], [Meta::CONTENT, 'text/html']);
+            new Meta([Meta::HTTP_EQUIV, 'X-UA-Compatible'], [Meta::CONTENT, 'IE=edge']);
+            new Meta([Meta::NAME, 'viewport'], [Meta::CONTENT, 'width=device-width, initial-scale=1, shrink-to-fit=no']);
+            new Meta([Meta::NAME, 'application-name'], [Meta::CONTENT, $this->getAppName()]);
+            new Meta([Meta::NAME, 'mobile-web-app-capable'], [Meta::CONTENT, 'yes']);
+            new Meta([Meta::NAME, 'theme-color'], [Meta::CONTENT, $this->getThemeColor()]);
+            new Meta([Meta::NAME, 'format-detection'], [Meta::CONTENT, "telephone=no"]);
+            new Meta([Meta::NAME, 'apple-mobile-web-app-capable'], [Meta::CONTENT, "yes"]);
+            new Meta([Meta::NAME, 'apple-mobile-web-app-status-bar-style'], [Meta::CONTENT, $this->getThemeColor()]);
+            new Meta([Meta::NAME, 'msapplication-TileColor'], [Meta::CONTENT, $this->getThemeColor()]);
+            new Meta([Meta::NAME, 'msapplication-TileImage'], [Meta::CONTENT, $this->getPostImage()]);
+            new Meta([Meta::NAME, 'author'], [Meta::CONTENT, $this->getAuthor()]);
+            if (!$this->isWordPress()) :
+                new Meta([Meta::NAME, 'generator'], [Meta::CONTENT, $this->systemName]);
+            endif;
+            new Meta([Meta::NAME, 'canonical'], [Meta::HREF, $this->getCurrentPage()]);
+            if ($this->seo) :
+                new Meta([Meta::NAME, 'keywords'], [Meta::CONTENT, $this->getKeywords()]);
+                new Meta([Meta::NAME, 'description'], [Meta::CONTENT, $this->getDetails()]);
+                new Meta([Meta::PROPERTY, 'og:url'], [Meta::CONTENT, $this->getCurrentPage()]);
+                new Meta([Meta::PROPERTY, 'og:locale'], [Meta::CONTENT, str_replace("-", "_", $this->pageLanguage)]);
+                new Meta([Meta::PROPERTY, 'og:type'], [Meta::CONTENT, $this->isHomePage() ? 'website' : 'article']); ?>
                 <meta property="og:title" content="<?= $this->getTitle(); ?>">
                 <meta property="og:description" content="<?= $this->getDetails(); ?>">
                 <meta property="og:image" content="<?= $this->getPostImage(); ?>">
@@ -949,7 +999,8 @@ class Groomer {
      * @param string $pageTitle Dynamically change the page pageTitle
      * @param Callable $cb A callback function to be executed before the function stops
      */
-    final public function getMeta($pageTitle = null, $cb = null) {
+    final public function getMeta($pageTitle = null, $cb = null)
+    {
         $this->getHead($pageTitle, $cb);
         return $this;
     }
@@ -959,7 +1010,8 @@ class Groomer {
      * @param string $class Body class
      * @param string $args Additional arguments to be added
      */
-    final public function openBody($class = null, $args = null) {
+    final public function openBody($class = null, $args = null)
+    {
         if ($this->pageBodyOpened) {
             return $this;
         }
@@ -984,7 +1036,8 @@ class Groomer {
      * @link https://stackoverflow.com/questions/677419/how-to-detect-search-engine-bots-with-php
      * @return bool
      */
-    public function isCrawlingBot() {
+    public function isCrawlingBot()
+    {
         if (preg_match('/abacho|accona|AddThis|AdsBot|ahoy|AhrefsBot|AISearchBot|alexa|altavista|anthill|appie|applebot|arale|araneo|AraybOt|ariadne|arks|aspseek|ATN_Worldwide|Atomz|baiduspider|baidu|bbot|bingbot|bing|Bjaaland|BlackWidow|BotLink|bot|boxseabot|bspider|calif|CCBot|ChinaClaw|christcrawler|CMC\/0\.01|combine|confuzzledbot|contaxe|CoolBot|cosmos|crawler|crawlpaper|crawl|curl|cusco|cyberspyder|cydralspider|dataprovider|digger|DIIbot|DotBot|downloadexpress|DragonBot|DuckDuckBot|dwcp|EasouSpider|ebiness|ecollector|elfinbot|esculapio|ESI|esther|eStyle|Ezooms|facebookexternalhit|facebook|facebot|fastcrawler|FatBot|FDSE|FELIX IDE|fetch|fido|find|Firefly|fouineur|Freecrawl|froogle|gammaSpider|gazz|gcreep|geona|Getterrobo-Plus|get|girafabot|golem|googlebot|\-google|grabber|GrabNet|griffon|Gromit|gulliver|gulper|hambot|havIndex|hotwired|htdig|HTTrack|ia_archiver|iajabot|IDBot|Informant|InfoSeek|InfoSpiders|INGRID\/0\.1|inktomi|inspectorwww|Internet Cruiser Robot|irobot|Iron33|JBot|jcrawler|Jeeves|jobo|KDD\-Explorer|KIT\-Fireball|ko_yappo_robot|label\-grabber|larbin|legs|libwww-perl|linkedin|Linkidator|linkwalker|Lockon|logo_gif_crawler|Lycos|m2e|majesticsEO|marvin|mattie|mediafox|mediapartners|MerzScope|MindCrawler|MJ12bot|mod_pagespeed|moget|Motor|msnbot|muncher|muninn|MuscatFerret|MwdSearch|NationalDirectory|naverbot|NEC\-MeshExplorer|NetcraftSurveyAgent|NetScoop|NetSeer|newscan\-online|nil|none|Nutch|ObjectsSearch|Occam|openstat.ru\/Bot|packrat|pageboy|ParaSite|patric|pegasus|perlcrawler|phpdig|piltdownman|Pimptrain|pingdom|pinterest|pjspider|PlumtreeWebAccessor|PortalBSpider|psbot|rambler|Raven|RHCS|RixBot|roadrunner|Robbie|robi|RoboCrawl|robofox|Scooter|Scrubby|Search\-AU|searchprocess|search|SemrushBot|Senrigan|seznambot|Shagseeker|sharp\-info\-agent|sift|SimBot|Site Valet|SiteSucker|skymob|SLCrawler\/2\.0|slurp|snooper|solbot|speedy|spider_monkey|SpiderBot\/1\.0|spiderline|spider|suke|tach_bw|TechBOT|TechnoratiSnoop|templeton|teoma|titin|topiclink|twitterbot|twitter|UdmSearch|Ukonline|UnwindFetchor|URL_Spider_SQL|urlck|urlresolver|Valkyrie libwww\-perl|verticrawl|Victoria|void\-bot|Voyager|VWbot_K|wapspider|WebBandit\/1\.0|webcatcher|WebCopier|WebFindBot|WebLeacher|WebMechanic|WebMoose|webquest|webreaper|webspider|webs|WebWalker|WebZip|wget|whowhere|winona|wlm|WOLP|woriobot|WWWC|XGET|xing|yahoo|YandexBot|YandexMobileBot|yandex|yeti|Zeus/i', $_SERVER['HTTP_USER_AGENT'])) {
             return true; // 'Above given bots detected'
         }
@@ -999,7 +1052,8 @@ class Groomer {
      * @param string $url The short asset url eg. /img/file.png
      * @return string
      */
-    final public static function wp_asset(string $url) {
+    final public static function wp_asset(string $url)
+    {
         return get_template_directory_uri() . $url;
     }
 
@@ -1007,7 +1061,8 @@ class Groomer {
      * Returns the stylesheet for index or all stylesheets
      * @return array
      */
-    protected function getStyles(int $index = null) {
+    protected function getStyles(int $index = null)
+    {
         if (null === $index) {
             return $this->stylesheetsURI;
         } else {
@@ -1021,7 +1076,8 @@ class Groomer {
      * @param bool $footer [optional] returns a script from that index
      * @return array
      */
-    final protected function getScripts(int $index = null, bool $footer = true) {
+    final protected function getScripts(int $index = null, bool $footer = true)
+    {
         $type = $footer ? 'footer' : 'head';
         return ($index === null) ? $this->javascriptsURI[$type] : $this->javascriptsURI[$type][$index];
     }
@@ -1030,7 +1086,8 @@ class Groomer {
      * Returns the robots rules
      * @return string
      */
-    protected function getRobots() {
+    protected function getRobots()
+    {
         return $this->robots;
     }
 
@@ -1038,7 +1095,8 @@ class Groomer {
      * Returns true if translation is enabled
      * @return bool
      */
-    protected function getTranslate() {
+    protected function getTranslate()
+    {
         return $this->translate;
     }
 
@@ -1046,7 +1104,8 @@ class Groomer {
      * Returns the SEO seoKeywords set for the page.
      * @return string
      */
-    protected function getKeywords() {
+    protected function getKeywords()
+    {
         $kw = '';
         $count = 1;
         if (is_array($this->seoKeywords)) {
@@ -1064,7 +1123,8 @@ class Groomer {
         }
         return $this->seoKeywords;
     }
-    protected function getPostImage() {
+    protected function getPostImage()
+    {
         if ($this->isWordPress()) {
             if (has_post_thumbnail()) {
                 $this->thumbnailDescription = the_post_thumbnail_caption();
@@ -1076,13 +1136,14 @@ class Groomer {
             }
             return $this->pageThumbnail;
         }
-        if($this->pageThumbnail[0] == '/'){
+        if ($this->pageThumbnail && $this->pageThumbnail[0] == '/') {
             return $this->getWebsiteHome() . $this->pageThumbnail;
         }
         return $this->getWebsiteHome() . '/' . $this->pageThumbnail;
     }
 
-    protected function addCompressionRule(string $regex, string $replacement) {
+    protected function addCompressionRule(string $regex, string $replacement)
+    {
         $this->outputBufferRegex['replace'][] =  $regex;
         $this->outputBufferRegex['with'][] =  $replacement;
         return $this;
@@ -1092,7 +1153,8 @@ class Groomer {
      * Compresses the html to be out-puted
      * @var string
      */
-    final protected function _compressOutput($buffer) {
+    final protected function _compressOutput($buffer)
+    {
         $buffer = preg_replace($this->outputBufferRegex['replace'], $this->outputBufferRegex['with'], $buffer);
         return $buffer;
     }
@@ -1102,7 +1164,8 @@ class Groomer {
      *
      * This function must be called just before the header tag if it's in a function.
      */
-    final protected function beforeHeader() {
+    final protected function beforeHeader()
+    {
         if (!$this->pageBodyOpened) {
             $this->openBody();
         }
@@ -1114,7 +1177,8 @@ class Groomer {
      *
      * Must be the first thing in a getMenu() function
      */
-    final protected function beforeMenu() {
+    final protected function beforeMenu()
+    {
         if (!$this->pageBodyOpened) {
             $this->openBody();
         }
@@ -1125,7 +1189,8 @@ class Groomer {
      * Prints the html markup (static by default) of the website footer.
      * @param array $scripts An array of footer scripts.
      */
-    final protected function beforeFooter(array $scripts = []) {
+    final protected function beforeFooter(array $scripts = [])
+    {
         $this->javascriptsURI['footer'] = array_merge($scripts, $this->javascriptsURI['footer']);
         if (!$this->isWordPress()) {
             foreach ($this->getScripts() as $script) {
@@ -1141,7 +1206,8 @@ class Groomer {
      * Enqueues a script for printing
      * @param array|string $script The javascript files property
      */
-    final protected function printScripts($script) {
+    final protected function printScripts($script)
+    {
         if (!$script || empty($script)) {
             return $this;
         }
@@ -1192,7 +1258,8 @@ class Groomer {
      * Enqueues a headCss for printing
      * @param string $headCss The stylesheet file property
      */
-    final protected function printStylesheets($headCss) {
+    final protected function printStylesheets($headCss)
+    {
         if (!$headCss) {
             return;
         }
@@ -1238,7 +1305,8 @@ class Groomer {
      * Links a font asynchronously from google servers
      * @param string $font The name of the font
      */
-    final protected function printFonts($font) {
+    final protected function printFonts($font)
+    {
         if (is_array($font)) {
             $font_name = $font['name'];
             $html = sprintf("<link rel=\"preconnect\" href=\"%s\" crossorigin>", $font['preconnect'] ?? '//fonts.gstatic.com');
@@ -1253,7 +1321,8 @@ class Groomer {
      * Adds a function to the systemTriggers
      * @return bool
      */
-    private function addTrigger(string $name, callable $callback) {
+    private function addTrigger(string $name, callable $callback)
+    {
         $name = strtolower($name);
         if (!array_key_exists($name, $this->systemTriggers)) {
             return false;
@@ -1261,7 +1330,8 @@ class Groomer {
         $this->systemTriggers[$name][] = $callback;
         return true;
     }
-    private function __initializeDefaults() {
+    private function __initializeDefaults()
+    {
         // set default values
 
         $this->outputBufferRegex = array(
@@ -1304,5 +1374,10 @@ class Groomer {
         $this->systemName = 'Caasi Groomer';
         $this->developerName = $this->pageAuthor = 'Caasi';
         $this->developerURL = 'https://caasi.co.zw/';
+    }
+
+    private function isHomePage()
+    {
+        return ($this->getCurrentPage() == $this->getWebsiteHome() . '/');
     }
 };
