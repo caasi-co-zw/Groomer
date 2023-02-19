@@ -1,4 +1,3 @@
 vendor
 .vscode
-src/Cms
-composer.min.json
+composer.lock
