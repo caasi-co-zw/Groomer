@@ -22,6 +22,6 @@ class Meta {
         $this->property = $enable ? 'property' : 'name';
     }
     public function __toString(){
-        return sprintf('<meta %s="%s" content="%s">',$this->property,$this->content);
+        return sprintf('<meta %s="%s" content="%s">',$this->property,$this->name,$this->content);
     }
 }
