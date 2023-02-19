@@ -13,7 +13,7 @@ endif;
  * Prepares and prints the markup to the browser.
  *
  * Optimized to make custom web development easy.
- * @pageAuthor Isaac <isaac@caasi.co.zw>
+ * @pageAuthor Isaac Machakata <isaac@caasi.co.zw>
  * @copyright Caasi
  * @link https://github.com/caasi-co-zw/Groomer
  * @version 1.1
