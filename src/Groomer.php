@@ -1,7 +1,7 @@
 <?php
 
 namespace Caasi;
-use Caasi/Groomer/Components;
+use Caasi\Groomer\Components;
 
 if (!defined('MANAGE_SESSION') || MANAGE_SESSION === true) :
     session_start();
