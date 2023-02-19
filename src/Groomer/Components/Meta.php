@@ -16,25 +16,27 @@ class Meta
     const PROPERTY = 'property';
     const HTTP_EQUIV = 'http-equiv';
     private $results = '';
+    private $elementName = 'meta';
 
     /**
      * Pass in a list of keys and their values.
      */
     public function __construct(...$values)
     {
-        $keys = $strings = ' ';
+        $keys = $strings = [];
         foreach ($values as $value) :
             if (is_string($value)) :
-                $strings .= sprintf(' %s', $value);
+                $strings[] = sprintf(' %s', $value);
             elseif (is_array($value)) :
-                $keys .= sprintf(' %s="%s"', $value[0], $value[1]);
+                $keys[] = sprintf(' %s="%s"', $value[0], $value[1]);
             endif;
         endforeach;
-        $this->results = $keys . $strings;
+        sort($strings);
+        $this->results = implode(' ', $keys) . implode(' ', $strings);
         print($this->__toString());
     }
     public function __toString()
     {
-        return sprintf('<meta %s>', $this->results);
+        return sprintf('<%s %s>', $this->elementName, trim($this->results));
     }
 }
