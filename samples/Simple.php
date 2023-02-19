@@ -33,7 +33,7 @@ class Webpage extends Groomer {
         parent::__construct();
         $this->setVersion(1.01);
         $this->setDomainExtension('com');
-        $this->name = &$this->getSitename();
+        $this->name = $this->getSitename();
     }
     public function getHeader() {
         //parent::beforeGetHeader();
