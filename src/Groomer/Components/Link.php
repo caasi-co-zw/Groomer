@@ -10,11 +10,13 @@ namespace Caasi\Groomer\Components;
  */
 class Link
 {
+    const ID = 'id';
+    const REL = 'rel';
+    const TYPE = 'type';
     const NAME = 'name';
     const HREF = 'href';
     const CONTENT = 'content';
-    const PROPERTY = 'property';
-    const HTTP_EQUIV = 'http-equiv';
+    const MANIFEST = 'rel="manifest"';
     private $results = '';
     private $elementName = 'link';
 
