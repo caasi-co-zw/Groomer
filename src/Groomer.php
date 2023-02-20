@@ -3,6 +3,7 @@
 namespace Caasi;
 
 use Caasi\Groomer\Components\Css;
+use Caasi\Groomer\Components\Cms;
 use Caasi\Groomer\Components\Meta;
 
 if (!defined('MANAGE_SESSION') || MANAGE_SESSION === true) :
@@ -247,6 +248,11 @@ class Groomer
      * @var object
      */
     public $theme;
+    /**
+     * @var \Caasi\Groomer\Components\Cms
+     */
+    protected $cms;
+    protected $metaCallbacks = array();
 
     /**
      * Name of the website
@@ -929,8 +935,8 @@ class Groomer
                 new Meta([Meta::NAME, 'description'], [Meta::CONTENT, $this->getDetails()]);
                 new Meta([Meta::PROPERTY, 'og:url'], [Meta::CONTENT, $this->getCurrentPage()]);
                 new Meta([Meta::PROPERTY, 'og:locale'], [Meta::CONTENT, str_replace("-", "_", $this->pageLanguage)]);
-                new Meta([Meta::PROPERTY, 'og:type'], [Meta::CONTENT, $this->isHomePage() ? 'website' : 'article']); ?>
-                <meta property="og:title" content="<?= $this->getTitle(); ?>">
+                new Meta([Meta::PROPERTY, 'og:type'], [Meta::CONTENT, $this->isHomePage() ? 'website' : 'article']);
+                new Meta([Meta::PROPERTY, 'og:title'], [Meta::CONTENT, $this->getTitle()]); ?>
                 <meta property="og:description" content="<?= $this->getDetails(); ?>">
                 <meta property="og:image" content="<?= $this->getPostImage(); ?>">
                 <meta property="og:image_alt" content="<?= $this->thumbnailDescription ?>">
