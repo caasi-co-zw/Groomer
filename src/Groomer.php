@@ -2,8 +2,8 @@
 
 namespace Caasi;
 
-use Caasi\Groomer\Components\Css;
 use Caasi\Groomer\Components\Cms;
+use Caasi\Groomer\Components\Link;
 use Caasi\Groomer\Components\Meta;
 
 if (!defined('MANAGE_SESSION') || MANAGE_SESSION === true) :
@@ -912,98 +912,85 @@ class Groomer
         <html lang="<?= $this->pageLanguage ?>" dir="<?= $this->pageTextDirection ?>">
 
         <head>
-            <?php
-            new Meta([Meta::NAME, 'charset'], [Meta::CONTENT, $this->pageCharset]);
-            new Meta([Meta::HTTP_EQUIV, 'Content-Type'], [Meta::CONTENT, 'text/html']);
-            new Meta([Meta::HTTP_EQUIV, 'X-UA-Compatible'], [Meta::CONTENT, 'IE=edge']);
-            new Meta([Meta::NAME, 'viewport'], [Meta::CONTENT, 'width=device-width, initial-scale=1, shrink-to-fit=no']);
-            new Meta([Meta::NAME, 'application-name'], [Meta::CONTENT, $this->getAppName()]);
-            new Meta([Meta::NAME, 'mobile-web-app-capable'], [Meta::CONTENT, 'yes']);
-            new Meta([Meta::NAME, 'theme-color'], [Meta::CONTENT, $this->getThemeColor()]);
-            new Meta([Meta::NAME, 'format-detection'], [Meta::CONTENT, "telephone=no"]);
-            new Meta([Meta::NAME, 'apple-mobile-web-app-capable'], [Meta::CONTENT, "yes"]);
-            new Meta([Meta::NAME, 'apple-mobile-web-app-status-bar-style'], [Meta::CONTENT, $this->getThemeColor()]);
-            new Meta([Meta::NAME, 'msapplication-TileColor'], [Meta::CONTENT, $this->getThemeColor()]);
-            new Meta([Meta::NAME, 'msapplication-TileImage'], [Meta::CONTENT, $this->getPostImage()]);
-            new Meta([Meta::NAME, 'author'], [Meta::CONTENT, $this->getAuthor()]);
-            if (!$this->isWordPress()) :
-                new Meta([Meta::NAME, 'generator'], [Meta::CONTENT, $this->systemName]);
-            endif;
-            new Meta([Meta::NAME, 'canonical'], [Meta::HREF, $this->getCurrentPage()]);
-            if ($this->seo) :
-                new Meta([Meta::NAME, 'keywords'], [Meta::CONTENT, $this->getKeywords()]);
-                new Meta([Meta::NAME, 'description'], [Meta::CONTENT, $this->getDetails()]);
-                new Meta([Meta::PROPERTY, 'og:url'], [Meta::CONTENT, $this->getCurrentPage()]);
-                new Meta([Meta::PROPERTY, 'og:locale'], [Meta::CONTENT, str_replace("-", "_", $this->pageLanguage)]);
-                new Meta([Meta::PROPERTY, 'og:type'], [Meta::CONTENT, $this->isHomePage() ? 'website' : 'article']);
-                new Meta([Meta::PROPERTY, 'og:title'], [Meta::CONTENT, $this->getTitle()]); ?>
-                <meta property="og:description" content="<?= $this->getDetails(); ?>">
-                <meta property="og:image" content="<?= $this->getPostImage(); ?>">
-                <meta property="og:image_alt" content="<?= $this->thumbnailDescription ?>">
-                <meta property="og:siteName" content="<?= $this->siteName; ?>">
-                <meta property="twitter:card" content="<?= $this->twitterCardType ?>">
-                <meta property="twitter:title" content="<?= $this->getTitle(); ?>">
-                <meta property="twitter:description" content="<?= $this->getDetails(); ?>">
-                <?php if ($this->twitterSite) : ?>
-                    <meta property="twitter:site" content="@<?= $this->twitterSite ?>">
-                <?php endif; ?>
-                <meta property="twitter:image" content="<?= $this->getPostImage() ?>">
-            <?php endif;
-            if ($this->facebookID) : ?>
-                <meta property="fb:app_id" content="<?= $this->facebookID ?>">
-            <?php endif;
-            if ($this->fonts) : foreach ($this->fonts as $font) :
-                    $this->printFonts($font);
+    <?php
+        new Meta([Meta::NAME, 'charset'], [Meta::CONTENT, $this->pageCharset]);
+        new Meta([Meta::HTTP_EQUIV, 'Content-Type'], [Meta::CONTENT, 'text/html']);
+        new Meta([Meta::HTTP_EQUIV, 'X-UA-Compatible'], [Meta::CONTENT, 'IE=edge']);
+        new Meta([Meta::NAME, 'viewport'], [Meta::CONTENT, 'width=device-width, initial-scale=1, shrink-to-fit=no']);
+        new Meta([Meta::NAME, 'application-name'], [Meta::CONTENT, $this->getAppName()]);
+        new Meta([Meta::NAME, 'mobile-web-app-capable'], [Meta::CONTENT, 'yes']);
+        new Meta([Meta::NAME, 'theme-color'], [Meta::CONTENT, $this->getThemeColor()]);
+        new Meta([Meta::NAME, 'format-detection'], [Meta::CONTENT, "telephone=no"]);
+        new Meta([Meta::NAME, 'apple-mobile-web-app-capable'], [Meta::CONTENT, "yes"]);
+        new Meta([Meta::NAME, 'apple-mobile-web-app-status-bar-style'], [Meta::CONTENT, $this->getThemeColor()]);
+        new Meta([Meta::NAME, 'msapplication-TileColor'], [Meta::CONTENT, $this->getThemeColor()]);
+        new Meta([Meta::NAME, 'msapplication-TileImage'], [Meta::CONTENT, $this->getPostImage()]);
+        new Meta([Meta::NAME, 'author'], [Meta::CONTENT, $this->getAuthor()]);
+        $this->isWordPress() ?: new Meta([Meta::NAME, 'generator'], [Meta::CONTENT, $this->systemName]);
+        new Meta([Meta::NAME, 'canonical'], [Meta::HREF, $this->getCurrentPage()]);
+        if ($this->seo) :
+            new Meta([Meta::NAME, 'keywords'], [Meta::CONTENT, $this->getKeywords()]);
+            new Meta([Meta::NAME, 'description'], [Meta::CONTENT, $this->getDetails()]);
+            new Meta([Meta::PROPERTY, 'og:url'], [Meta::CONTENT, $this->getCurrentPage()]);
+            new Meta([Meta::PROPERTY, 'og:locale'], [Meta::CONTENT, str_replace("-", "_", $this->pageLanguage)]);
+            new Meta([Meta::PROPERTY, 'og:type'], [Meta::CONTENT, $this->isHomePage() ? 'website' : 'article']);
+            new Meta([Meta::PROPERTY, 'og:title'], [Meta::CONTENT, $this->getTitle()]);
+            new Meta([Meta::PROPERTY, 'og:description'], [Meta::CONTENT, $this->getDetails()]);
+            new Meta([Meta::PROPERTY, 'og:image'], [Meta::CONTENT, $this->getPostImage()]);
+            new Meta([Meta::PROPERTY, 'og:image_alt'], [Meta::CONTENT, $this->thumbnailDescription]);
+            new Meta([Meta::PROPERTY, 'og:site_name'], [Meta::CONTENT, $this->siteName]);
+            new Meta([Meta::PROPERTY, 'twitter:card'], [Meta::CONTENT, $this->twitterCardType]);
+            new Meta([Meta::PROPERTY, 'twitter:title'], [Meta::CONTENT, $this->getTitle()]);
+            new Meta([Meta::PROPERTY, 'twitter:description'], [Meta::CONTENT, $this->getDetails()]);
+            !$this->twitterSite ?: new Meta([Meta::PROPERTY, 'twitter:site'], [Meta::CONTENT, '@' . $this->twitterSite]);
+            new Meta([Meta::PROPERTY, 'twitter:image'], [Meta::CONTENT, $this->getPostImage()]);
+        endif;
+        !$this->facebookID ?: new Meta([Meta::PROPERTY, 'fb:app_id'], [Meta::CONTENT, $this->facebookID]);
+        if ($this->fonts) :
+            foreach ($this->fonts as $font) :
+                $this->printFonts($font);
+            endforeach;
+        endif;
+        new Link([Link::REL, 'shortcut icon'], [Link::TYPE, $this->faviconType], [Link::HREF, $this->getFavicon()]);
+        !$this->manifest ?: new Link([Link::MANIFEST], [Link::HREF, $this->manifest]);
+        if (!$this->isWordPress()) :
+            foreach ($this->getStyles() as $headCss) {
+                $this->printStylesheets($headCss);
+            }
+            for ($i = 0; $i < count($this->getScripts(null, false)); $i++) {
+                $this->printScripts($this->getScripts($i, false));
+            }
+        else :
+            add_action('wp_enqueue_scripts', function () {
+                $styles = $this->getStyles();
+                foreach ($styles as $headCss) :
+                    $name = $headCss['name'] ?? uniqid('csg');
+                    $headCss['src'] = get_template_directory_uri() . $headCss['src'];
+                    wp_register_style(sprintf("csg-%s", $name), $headCss['src'], $headCss['deps'] ?? [], $headCss['version'] ?? $this->version, $headCss['media'] ?? 'all');
+                    wp_enqueue_style(sprintf("csg-%s", $name));
                 endforeach;
-            endif; ?>
-            <link rel="shortcut icon" href="<?= $this->getFavicon(); ?>" type="<?= $this->faviconType ?>">
-            <?php
-
-            if ($this->manifest) :
-                printf("<link rel=\"manifest\" href=\"%s\">", $this->manifest);
-            endif;
-            if (!$this->isWordPress()) :
-                foreach ($this->getStyles() as $headCss) {
-                    $this->printStylesheets($headCss);
-                }
-                for ($i = 0; $i < count($this->getScripts(null, false)); $i++) {
-                    $this->printScripts($this->getScripts($i, false));
-                }
-            else :
-                add_action('wp_enqueue_scripts', function () {
-                    $styles = $this->getStyles();
-                    foreach ($styles as $headCss) :
-                        $name = $headCss['name'] ?? uniqid('csg');
-                        $headCss['src'] = get_template_directory_uri() . $headCss['src'];
-                        wp_register_style(sprintf("csg-%s", $name), $headCss['src'], $headCss['deps'] ?? [], $headCss['version'] ?? $this->version, $headCss['media'] ?? 'all');
-                        wp_enqueue_style(sprintf("csg-%s", $name));
-                    endforeach;
-                });
-                add_action('wp_enqueue_scripts', function () {
-                    $this->printScripts($this->javascriptsURI['head']);
-                });
-                add_action('wp_enqueue_scripts', function () {
-                    $this->printScripts($this->javascriptsURI['footer']);
-                });
-                wp_head();
-            endif;
-            // @define('PG_TITLE', $this->getTitle());
-            printf("<title>%s</title>", $this->getTitle());
-            if ($this->headCss) :
-                printf("<style type=\"text/css\">%s</style>", $this->headCss);
-            endif; ?>
-        </head>
-<?php
+            });
+            add_action('wp_enqueue_scripts', function () {
+                $this->printScripts($this->javascriptsURI['head']);
+            });
+            add_action('wp_enqueue_scripts', function () {
+                $this->printScripts($this->javascriptsURI['footer']);
+            });
+            wp_head();
+        endif;
+        printf("<title>%s</title>", $this->getTitle());
+        $this->headCss ? printf("<style type=\"text/css\">%s</style>", $this->headCss) : null;
         if ($cb && is_callable($cb)) :
             call_user_func($cb);
         endif;
+        print('</head>');
         return $this;
     }
 
     /**
      * Returns the html + head section of the site.
      * @param string $pageTitle Dynamically change the page pageTitle
-     * @param Callable $cb A callback function to be executed before the function stops
+     * @param \callable $cb A callback function to be executed before the function stops
      */
     final public function getMeta($pageTitle = null, $cb = null)
     {
