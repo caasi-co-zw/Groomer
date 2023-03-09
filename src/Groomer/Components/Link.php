@@ -8,7 +8,7 @@ namespace Caasi\Groomer\Components;
  * @link https://github.com/caasi-co-zw/groomer
  * @version 1.0.0
  */
-class Link
+class Link extends Component
 {
     const ID = 'id';
     const REL = 'rel';
@@ -17,28 +17,5 @@ class Link
     const HREF = 'href';
     const CONTENT = 'content';
     const MANIFEST = 'rel="manifest"';
-    private $results = '';
-    private $elementName = 'link';
-
-    /**
-     * Pass in a list of keys and their values.
-     */
-    public function __construct(...$values)
-    {
-        $keys = $strings = [];
-        foreach ($values as $value) :
-            if (is_string($value)) :
-                $strings[] = sprintf(' %s', $value);
-            elseif (is_array($value)) :
-                $keys[] = sprintf(' %s="%s"', $value[0], $value[1]);
-            endif;
-        endforeach;
-        sort($strings);
-        $this->results = implode(' ', $keys) . implode(' ', $strings);
-        print($this->__toString());
-    }
-    public function __toString()
-    {
-        return sprintf('<%s %s>', $this->elementName, trim($this->results));
-    }
+    protected $elementName = 'link';
 }
