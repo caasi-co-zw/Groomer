@@ -50,6 +50,6 @@ class Component
         if ($this->closeTag) {
             return sprintf('<%s %s>%s</%1$s>', $this->elementName, trim($this->results), $this->value);
         }
-        return sprintf('<%s %s>%s', $this->elementName, trim($this->results), $this->value);
+        return sprintf('<%s %s/>%s', $this->elementName, trim($this->results), $this->value);
     }
 }
