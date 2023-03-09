@@ -17,6 +17,9 @@ class Component
     protected $results = '';
     protected $value = null;
     protected $elementName = 'script';
+    /**
+     * Adds a matching closing tag when enabled
+     */
     protected $closeTag = true;
 
     /**
