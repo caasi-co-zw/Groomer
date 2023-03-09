@@ -18,4 +18,5 @@ class Link extends Component
     const CONTENT = 'content';
     const MANIFEST = 'rel="manifest"';
     protected $elementName = 'link';
+    protected $closeTag = false;
 }

@@ -14,4 +14,5 @@ class Meta extends Component
     const PROPERTY = 'property';
     const HTTP_EQUIV = 'http-equiv';
     protected $elementName = 'meta';
+    protected $closeTag = false;
 }
