@@ -32,10 +32,10 @@ class Component
         $keys = $strings = [];
         foreach ($values as $value) :
             if ($this->skipIf($value)) continue;
-            if ($value == self::DO_NOT_PRINT) {
-                $this->print = false;
-            }
             if (is_string($value)) :
+                if ($value == self::DO_NOT_PRINT) :
+                    $this->print = false;
+                endif;
                 $strings[] = sprintf(' %s', $value);
             elseif (is_array($value)) :
                 if (strtolower($value[0]) == $this->elementName && !$this->value && $this->closeTag) {
