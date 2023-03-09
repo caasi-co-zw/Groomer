@@ -11,6 +11,7 @@ namespace Caasi\Groomer\Components;
 class Script extends Component
 {
     const TYPE = 'type';
+    const TYPE_MODULE = 'type="module"';
+    const TYPE_JAVASCRIPT = 'type="text/javascript"';
     private $elementName = 'script';
-
 }
