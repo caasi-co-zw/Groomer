@@ -14,6 +14,7 @@ class Component
     const HREF = 'href';
     const NAME = 'name';
     const SRC = 'src';
+    const DO_NOT_PRINT = "do-no-print";
     protected $results = '';
     protected $value = null;
     protected $elementName = 'script';
@@ -21,6 +22,7 @@ class Component
      * Adds a matching closing tag when enabled
      */
     protected $closeTag = true;
+    private $print = true;
 
     /**
      * Pass in a list of keys and their values.
@@ -30,6 +32,9 @@ class Component
         $keys = $strings = [];
         foreach ($values as $value) :
             if ($this->skipIf($value)) continue;
+            if ($value == self::DO_NOT_PRINT) {
+                $this->print = false;
+            }
             if (is_string($value)) :
                 $strings[] = sprintf(' %s', $value);
             elseif (is_array($value)) :
@@ -42,7 +47,9 @@ class Component
         endforeach;
         sort($strings);
         $this->results = implode(' ', $keys) . implode(' ', $strings);
-        print($this->__toString());
+        if ($this->print) {
+            print($this->__toString());
+        }
     }
     protected function skipIf(&$value): bool
     {
