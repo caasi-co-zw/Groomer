@@ -14,6 +14,7 @@ class Component
     const HREF = 'href';
     const NAME = 'name';
     const SRC = 'src';
+    const PRINT = "print";
     const DO_NOT_PRINT = "do-no-print";
     protected $results = '';
     protected $value = null;
@@ -22,7 +23,7 @@ class Component
      * Adds a matching closing tag when enabled
      */
     protected $closeTag = true;
-    private $print = true;
+    private $print = false;
 
     /**
      * Pass in a list of keys and their values.
@@ -35,6 +36,8 @@ class Component
             if (is_string($value)) :
                 if ($value == self::DO_NOT_PRINT) :
                     $this->print = false;
+                elseif ($value == self::PRINT) :
+                    $this->print = true;
                 endif;
                 $strings[] = sprintf(' %s', $value);
             elseif (is_array($value)) :
@@ -60,6 +63,6 @@ class Component
         if ($this->closeTag) {
             return sprintf('<%s %s>%s</%1$s>', $this->elementName, trim($this->results), $this->value);
         }
-        return sprintf('<%s %s/>%s', $this->elementName, trim($this->results), $this->value);
+        return sprintf('<%s %s/>', $this->elementName, trim($this->results));
     }
 }
