@@ -8,7 +8,7 @@ namespace Caasi\Groomer\Components;
  * @link https://github.com/caasi-co-zw/groomer
  * @version 1.0.0
  */
-class Script extends Component
+class Script extends BaseComponent
 {
     const TYPE = 'type';
     const TYPE_MODULE = 'type="module"';

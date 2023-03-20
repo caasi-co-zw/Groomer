@@ -8,7 +8,7 @@ namespace Caasi\Groomer\Components;
  * @link https://github.com/caasi-co-zw/groomer
  * @version 1.0.0
  */
-class Meta extends Component
+class Meta extends BaseComponent
 {
     const CONTENT = 'content';
     const PROPERTY = 'property';

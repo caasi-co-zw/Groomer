@@ -8,7 +8,7 @@ namespace Caasi\Groomer\Components;
  * @link https://github.com/caasi-co-zw/groomer
  * @version 1.0.0
  */
-class Link extends Component
+class Link extends BaseComponent
 {
     const ID = 'id';
     const REL = 'rel';
