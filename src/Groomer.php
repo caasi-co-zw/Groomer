@@ -2,7 +2,6 @@
 
 namespace Caasi;
 
-use Caasi\Groomer\Components\Cms;
 use Caasi\Groomer\Components\Link;
 use Caasi\Groomer\Components\Meta;
 
@@ -58,8 +57,21 @@ class Groomer
     private $pageRouteRegexPresets = [];
 
     private $requiredFonts = [];
-    private $metaTags = [];
-    private $linkTags = [];
+
+    /**
+     * These are printed only when SEO is enabled.
+     */
+    private $seoHeadTags = [];
+
+    /**
+     * These are printed even when SEO is disabled and may include css stylsheets urls
+     */
+    private $otherHeadTags = [];
+
+    /**
+     * Used to prevent duplicates head keys
+     */
+    private $headTagsKeys = [];
     /**
      * The page title
      * @var string
@@ -248,10 +260,6 @@ class Groomer
      * @var object
      */
     public $theme;
-    /**
-     * @var \Caasi\Groomer\Components\Cms
-     */
-    protected $cms;
     protected $metaCallbacks = array();
 
     /**
@@ -832,6 +840,44 @@ class Groomer
     {
         return $this->version;
     }
+
+    /**
+     * @param string $key 
+     * @param string $value
+     */
+    public function addHeadTag($key, $value, $seo = false)
+    {
+        // if key already exists but in a different setting
+        // then remove the old setting and make way for the new setting
+        // eg. if name exists for seo only but the current user trying to
+        // set it globally, remove for seo and set it globally
+        if (array_key_exists($key, $this->headTagsKeys)) {
+            if (($seo && $this->headTagsKeys[$key] != 'seo') || (!$seo && $this->headTagsKeys[$key] != 'global')) {
+                $this->removeHeadTag($key, !$seo);
+            }
+        }
+
+        // store the key and its value
+        ($seo ? $this->seoHeadTags : $this->otherHeadTags)[$key] = $value;
+
+        // record key setting
+        $this->headTagsKeys[$key] = $seo ? 'seo' : 'global';
+        return $this;
+    }
+
+    /**
+     * @param string $key 
+     * @param string $value
+     * @param bool $seo
+     */
+    public function removeHeadTag($key, $seo = false)
+    {
+        if (array_key_exists($key, $this->headTagsKeys)) {
+            unset(($seo ? $this->seoHeadTags : $this->otherHeadTags)[$key]);
+        }
+        return $this;
+    }
+
     /**
      * Returns true when the set local localTLD does not match the current localTLD
      * @return bool
