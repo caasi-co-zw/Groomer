@@ -1,6 +1,7 @@
 <?php
 
 use Caasi\Groomer;
+use Caasi\Groomer\Components\Meta;
 
 include __DIR__ . '/../vendor/autoload.php';
 
@@ -10,6 +11,8 @@ class Webpage extends Groomer {
      * @var bool
      */
     public function __construct() {
+        parent::__construct();
+        $this->setSeo(false);
         $this->setSitename('Demo');
         $this->addStyles(
             [
@@ -30,10 +33,10 @@ class Webpage extends Groomer {
                 'footer' => false
             )
         );
-        parent::__construct();
         $this->setVersion(1.01);
         $this->setDomainExtension('test');
         $this->name = $this->getSitename();
+        $this->addHeadTag('theme-color',new Meta([Meta::NAME,'theme-color'],[Meta::CONTENT,'#fff']));
     }
     public function getHeader() {
         //parent::beforeGetHeader();

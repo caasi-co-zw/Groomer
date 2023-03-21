@@ -975,10 +975,10 @@ class Groomer
         foreach ($this->getTags() as $tag) {
             print($tag);
         }
-        foreach ($this->getTags(true) as $tag) {
-            print($tag);
-        }
         if ($this->seo) :
+            foreach ($this->getTags(true) as $tag) {
+                print($tag);
+            }
         endif;
         !$this->facebookID ?: new Meta([Meta::PROPERTY, 'fb:app_id'], [Meta::CONTENT, $this->facebookID]);
         if ($this->fonts) :
@@ -1445,8 +1445,10 @@ class Groomer
         foreach ($tags as $key => $value) {
             $this->addHeadTag($key, $value);
         }
-        foreach ($seo_tags as $key => $value) {
-            $this->addHeadTag($key, $value);
+        if ($this->seo) {
+            foreach ($seo_tags as $key => $value) {
+                $this->addHeadTag($key, $value);
+            }
         }
     }
 
