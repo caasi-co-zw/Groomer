@@ -216,7 +216,7 @@ class Groomer
      * Localhost top domain level if any
      * @var string
      */
-    protected $localTLD;
+    protected $localTLD = 'localhost';
     protected $menu;
     protected $postImage;
     protected $errors;
