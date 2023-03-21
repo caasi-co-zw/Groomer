@@ -1,6 +1,6 @@
 <?php
 
-namespace Caasi\Groomer\Extensions\WordPress\Bootstrap;
+namespace Extensions\WordPress\Bootstrap;
 
 /**
  * Custom comment walker for this theme.
@@ -10,7 +10,8 @@ namespace Caasi\Groomer\Extensions\WordPress\Bootstrap;
  * @since Twenty Twenty Two 1.0
  */
 
-class Groover_Comments extends \Walker_Comment {
+class Groover_Comments extends \Walker_Comment
+{
 
 	/**
 	 * Outputs a comment in the HTML5 format.
@@ -28,7 +29,8 @@ class Groover_Comments extends \Walker_Comment {
 	 * @param int        $depth   Depth of the current comment.
 	 * @param array      $args    An array of arguments.
 	 */
-	protected function html5_comment($comment, $depth, $args) {
+	protected function html5_comment($comment, $depth, $args)
+	{
 
 		$tag = ('div' === $args['style']) ? 'div' : 'li';
 

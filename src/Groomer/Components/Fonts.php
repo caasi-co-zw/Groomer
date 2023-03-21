@@ -1,6 +1,6 @@
 <?php
 
-namespace Caasi\Groomer\Components;
+namespace Components;
 
 /**
  * Basic font structure
@@ -8,16 +8,19 @@ namespace Caasi\Groomer\Components;
  * @link https://github.com/caasi-co-zw/groomer
  * @version 1.0.0
  */
-class Fonts {
+class Fonts
+{
     private $name;
-    
+
     const WEIGHT_NORMAL = 400;
     const WEIGHT_BOLD = 600;
-    
-    public function __construct() {
+
+    public function __construct()
+    {
     }
 
-    public function setName(string $name) {
+    public function setName(string $name)
+    {
         $this->name = $name;
     }
 }

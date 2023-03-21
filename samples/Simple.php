@@ -1,26 +1,22 @@
 <?php
 
-use Caasi\Groomer;
-use Caasi\Groomer\Components\Meta;
 
 include __DIR__ . '/../vendor/autoload.php';
 
-class Webpage extends Groomer {
+class Webpage extends Groomer\Groomer
+{
     public $name;
     /**
      * @var bool
      */
-    public function __construct() {
+    public function __construct()
+    {
         parent::__construct();
         $this->setSeo(false);
         $this->setSitename('Demo');
         $this->addStyles(
             [
-                'src' => '/css/bootstrap.css',
-                'name' => 'tbs'
-            ],
-            [
-                'src' => '/css/style.min.css',
+                'src' => '/samples/assets/style.css',
                 'name' => 'cs'
             ],
         );
@@ -37,18 +33,22 @@ class Webpage extends Groomer {
         $this->setDomainExtension('test');
         $this->name = $this->getSitename();
     }
-    public function getHeader() {
+    public function getHeader()
+    {
         //parent::beforeGetHeader();
         return $this;
     }
-    public function getMenu() {
+    public function getMenu()
+    {
         //parent::beforeGetMenu();
 ?>
     <?php return $this;
     }
-    public function getSearch() {
+    public function getSearch()
+    {
     }
-    public function getFooter(array $scripts = []) {
+    public function getFooter(array $scripts = [])
+    {
         //parent::beforeGetFooter($scripts);
     ?>
         </body>

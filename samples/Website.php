@@ -2,10 +2,12 @@
 
 include __DIR__ . '/../autoload.php';
 
-class Website extends Caasi\Groomer {
+class Website extends Groomer
+{
     public $variable1;
 
-    public function __construct($config = [], $cb = null) {
+    public function __construct($config = [], $cb = null)
+    {
         // your code
         $this->addStyles(
             array(

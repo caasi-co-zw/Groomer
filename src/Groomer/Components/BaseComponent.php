@@ -1,6 +1,6 @@
 <?php
 
-namespace Caasi\Groomer\Components;
+namespace Groomer\Components;
 
 /**
  * Basic structure of a base

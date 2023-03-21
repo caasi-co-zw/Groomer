@@ -1,6 +1,6 @@
 {
 	"name": "caasi-co-zw/groomer",
-	"description": "Easily create your custom websites",
+	"description": "Easily create your website with a custom template infused with custom meta data.",
 	"type": "project",
 	"license": "MIT",
 	"keywords": [
@@ -14,8 +14,7 @@
 			"UnitTests": "tests/"
 		},
 		"psr-4": {
-			"Caasi\\": "src/",
-			"Caasi\\Groomer\\": "src/Groomer/"
+			"Groomer\\": "src/Groomer/"
 		}
 	},
 	"authors": [

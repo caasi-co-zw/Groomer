@@ -1,12 +1,14 @@
 <?php
 include __DIR__ . '/../autoload.php';
 
-class Webpage extends Caasi\Groomer {
+class Webpage extends Groomer
+{
     public $name;
     /**
      * @var bool
      */
-    public function __construct($config = [], $cb = null) {
+    public function __construct($config = [], $cb = null)
+    {
         $this->sitename = 'Demo';
         $this->addStyles(
             [
@@ -32,19 +34,23 @@ class Webpage extends Caasi\Groomer {
         parent::__construct($config, $cb);
         $this->name = &$this->sitename;
     }
-    public function getHeader() {
+    public function getHeader()
+    {
         //parent::beforeGetHeader();
         return $this;
     }
-    public function getMenu() {
+    public function getMenu()
+    {
         //parent::beforeGetMenu();
 ?>
 
     <?php return $this;
     }
-    public function getSearch() {
+    public function getSearch()
+    {
     }
-    public function getFooter(array $scripts = []) {
+    public function getFooter(array $scripts = [])
+    {
         //parent::beforeGetFooter($scripts);
     ?>
         </body>

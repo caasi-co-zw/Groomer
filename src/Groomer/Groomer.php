@@ -1,9 +1,9 @@
 <?php
 
-namespace Caasi;
+namespace Groomer;
 
-use Caasi\Groomer\Components\Link;
-use Caasi\Groomer\Components\Meta;
+use Groomer\Components\Link;
+use Groomer\Components\Meta;
 
 if (!defined('MANAGE_SESSION') || MANAGE_SESSION === true) :
     session_start();
