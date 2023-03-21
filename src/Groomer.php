@@ -1413,6 +1413,52 @@ class Groomer
         $this->systemName = 'Caasi Groomer';
         $this->developerName = $this->pageAuthor = 'Caasi';
         $this->developerURL = 'https://caasi.co.zw/';
+
+        // set global meta tags
+        $tags = [
+            'charset' => new Meta([Meta::NAME, 'charset'], [Meta::CONTENT, $this->pageCharset]),
+            'content-type' => new Meta([Meta::HTTP_EQUIV, 'Content-Type'], [Meta::CONTENT, 'text/html']),
+            'x-ua-compatible' => new Meta([Meta::HTTP_EQUIV, 'X-UA-Compatible'], [Meta::CONTENT, 'IE=edge']),
+            'viewport' => new Meta([Meta::NAME, 'viewport'], [Meta::CONTENT, 'width=device-width, initial-scale=1,shrink-to-fit=no']),
+            'application-name' => new Meta([Meta::NAME, 'application-name'], [Meta::CONTENT, $this->getAppName()]),
+            'mobile-web-app-capable' => new Meta([Meta::NAME, 'mobile-web-app-capable'], [Meta::CONTENT, 'yes']),
+            'theme-color' => new Meta([Meta::NAME, 'theme-color'], [Meta::CONTENT, $this->getThemeColor()]),
+            'format-detection' => new Meta([Meta::NAME, 'format-detection'], [Meta::CONTENT, "telephone=no"]),
+            'apple-mobile-web-app-capable' => new Meta([Meta::NAME, 'apple-mobile-web-app-capable'], [Meta::CONTENT, "yes"]),
+            'apple-mobile-web-app-status-bar-style' => new Meta([Meta::NAME, 'apple-mobile-web-app-status-bar-style'], [Meta::CONTENT, $this->getThemeColor()]),
+            'msapplication-TileColor' => new Meta([Meta::NAME, 'msapplication-TileColor'], [Meta::CONTENT, $this->getThemeColor()]),
+            'msapplication-TileImage' => new Meta([Meta::NAME, 'msapplication-TileImage'], [Meta::CONTENT, $this->getPostImage()]),
+            'author' => new Meta([Meta::NAME, 'author'], [Meta::CONTENT, $this->getAuthor()]),
+        ];
+        $this->isWordPress() ?: $tags['generator'] = new Meta([Meta::NAME, 'generator'], [Meta::CONTENT, $this->systemName]);
+        $tags['canonical'] = new Meta([Meta::NAME, 'canonical'], [Meta::HREF, $this->getCurrentPage()]);
+
+        // add default seo tags
+        $seo_tags = [
+            'keywords' => new Meta([Meta::NAME, 'keywords'], [Meta::CONTENT, $this->getKeywords()]),
+            'description' => new Meta([Meta::NAME, 'description'], [Meta::CONTENT, $this->getDetails()]),
+            'og:url' => new Meta([Meta::PROPERTY, 'og:url'], [Meta::CONTENT, $this->getCurrentPage()]),
+            'og:locale' => new Meta([Meta::PROPERTY, 'og:locale'], [Meta::CONTENT, str_replace("-", "_", $this->pageLanguage)]),
+            'og:type' => new Meta([Meta::PROPERTY, 'og:type'], [Meta::CONTENT, $this->isHomePage() ? 'website' : 'article']),
+            'og:title' => new Meta([Meta::PROPERTY, 'og:title'], [Meta::CONTENT, $this->getTitle()]),
+            'og:description' => new Meta([Meta::PROPERTY, 'og:description'], [Meta::CONTENT, $this->getDetails()]),
+            'og:image' => new Meta([Meta::PROPERTY, 'og:image'], [Meta::CONTENT, $this->getPostImage()]),
+            'og:image_alt' => new Meta([Meta::PROPERTY, 'og:image_alt'], [Meta::CONTENT, $this->thumbnailDescription]),
+            'og:site_name' => new Meta([Meta::PROPERTY, 'og:site_name'], [Meta::CONTENT, $this->siteName]),
+            'twitter:image' => new Meta([Meta::PROPERTY, 'twitter:image'], [Meta::CONTENT, $this->getPostImage()]),
+            'twitter:card' => new Meta([Meta::PROPERTY, 'twitter:card'], [Meta::CONTENT, $this->twitterCardType]),
+            'twitter:title' => new Meta([Meta::PROPERTY, 'twitter:title'], [Meta::CONTENT, $this->getTitle()]),
+            'twitter:description' => new Meta([Meta::PROPERTY, 'twitter:description'], [Meta::CONTENT, $this->getDetails()]),
+        ];
+        !$this->twitterSite ?: $seo_tags['twitter:site'] = new Meta([Meta::PROPERTY, 'twitter:site'], [Meta::CONTENT, '@' . $this->twitterSite]);
+
+        // add tags to system
+        foreach ($tags as $key => $value) {
+            $this->addHeadTag($key, $value);
+        }
+        foreach ($seo_tags as $key => $value) {
+            $this->addHeadTag($key, $value);
+        }
     }
 
     private function isHomePage()
