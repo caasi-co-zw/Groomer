@@ -15,7 +15,7 @@ class BaseComponent
     const NAME = 'name';
     const SRC = 'src';
     const PRINT = "print";
-    const DO_NOT_PRINT = "do-no-print";
+    const DONT_PRINT = "do-no-print";
     protected $results = '';
     protected $value = null;
     protected $elementName = 'script';
@@ -34,7 +34,7 @@ class BaseComponent
         foreach ($values as $value) :
             if ($this->skipIf($value)) continue;
             if (is_string($value)) :
-                if ($value == self::DO_NOT_PRINT) :
+                if ($value == self::DONT_PRINT) :
                     $this->print = false;
                 elseif ($value == self::PRINT) :
                     $this->print = true;
