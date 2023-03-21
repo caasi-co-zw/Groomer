@@ -1111,20 +1111,8 @@ class Groomer
      */
     protected function getKeywords()
     {
-        $kw = '';
-        $count = 1;
         if (is_array($this->seoKeywords)) {
-            foreach ($this->seoKeywords as $word) {
-                if (empty($word)) {
-                    continue;
-                }
-                if ($count > 1) {
-                    $kw .= ',';
-                }
-                $kw .= $word;
-                $count++;
-            }
-            return $kw;
+            $this->seoKeywords = implode(',', $this->seoKeywords);
         }
         return $this->seoKeywords;
     }
