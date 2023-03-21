@@ -960,28 +960,16 @@ class Groomer
         }
         if ($pageTitle) {
             $this->pageTitle = $pageTitle;
-        } ?>
-        <!DOCTYPE html>
-        <html lang="<?= $this->pageLanguage ?>" dir="<?= $this->pageTextDirection ?>">
-
-        <head>
-    <?php
-        foreach ($this->getTags() as $tag) {
-            print($tag);
         }
+        printf('<!DOCTYPE html><html lang="%s" dir="%s"><head>', $this->pageLanguage, $this->pageTextDirection);
         if ($this->seo) :
             foreach ($this->getTags(true) as $tag) {
                 print($tag);
             }
         endif;
-        !$this->facebookID ?: new Meta([Meta::PROPERTY, 'fb:app_id'], [Meta::CONTENT, $this->facebookID]);
-        if ($this->fonts) :
-            foreach ($this->fonts as $font) :
-                $this->printFonts($font);
-            endforeach;
-        endif;
-        new Link([Link::REL, 'shortcut icon'], [Link::TYPE, $this->faviconType], [Link::HREF, $this->getFavicon()]);
-        !$this->manifest ?: new Link([Link::MANIFEST], [Link::HREF, $this->manifest]);
+        foreach ($this->getTags() as $tag) {
+            print($tag);
+        }
         if (!$this->isWordPress()) :
             foreach ($this->getStyles() as $headCss) {
                 $this->printStylesheets($headCss);
@@ -1007,12 +995,7 @@ class Groomer
             });
             wp_head();
         endif;
-        printf("<title>%s</title>", $this->getTitle());
-        $this->headCss ? printf("<style type=\"text/css\">%s</style>", $this->headCss) : null;
-        if ($cb && is_callable($cb)) :
-            call_user_func($cb);
-        endif;
-        print('</head>');
+        printf("<title>%s</title></head>", $this->getTitle());
         return $this;
     }
 
@@ -1415,6 +1398,8 @@ class Groomer
         ];
         $this->isWordPress() ?: $tags['generator'] = new Meta([Meta::NAME, 'generator'], [Meta::CONTENT, $this->systemName]);
         $tags['canonical'] = new Meta([Meta::NAME, 'canonical'], [Meta::HREF, $this->getCurrentPage()]);
+        !$this->manifest ?: $tags['manifest'] = new Link([Link::MANIFEST], [Link::HREF, $this->manifest]);
+        $tags['shortcut-icon'] = new Link([Link::REL, 'shortcut icon'], [Link::TYPE, $this->faviconType], [Link::HREF, $this->getFavicon()]);
 
         // add default seo tags
         $seo_tags = [
