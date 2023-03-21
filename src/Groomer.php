@@ -237,7 +237,7 @@ class Groomer
      * Enable or disable SEO
      * @var bool
      */
-    protected $seo = true;
+    protected $seoEnabled = true;
 
     /**
      * Custom schema.org json
@@ -557,7 +557,7 @@ class Groomer
      */
     public function setSeo(bool $seo)
     {
-        $this->seo = $seo;
+        $this->seoEnabled = $seo;
         return $this;
     }
 
@@ -962,7 +962,7 @@ class Groomer
             $this->pageTitle = $pageTitle;
         }
         printf('<!DOCTYPE html><html lang="%s" dir="%s"><head>', $this->pageLanguage, $this->pageTextDirection);
-        if ($this->seo) :
+        if ($this->seoEnabled) :
             foreach ($this->getTags(true) as $tag) {
                 print($tag);
             }
@@ -1004,9 +1004,9 @@ class Groomer
      * @param string $pageTitle Dynamically change the page pageTitle
      * @param \callable $cb A callback function to be executed before the function stops
      */
-    final public function getMeta($pageTitle = null, $cb = null)
+    final public function getMeta($pageTitle = null)
     {
-        $this->getHead($pageTitle, $cb);
+        $this->getHead($pageTitle);
         return $this;
     }
 
@@ -1291,22 +1291,6 @@ class Groomer
                 echo $stylesheetsURI;
             }
         endif;
-        return $this;
-    }
-
-    /**
-     * Links a font asynchronously from google servers
-     * @param string $font The name of the font
-     */
-    final protected function printFonts($font)
-    {
-        if (is_array($font)) {
-            $font_name = $font['name'];
-            $html = sprintf("<link rel=\"preconnect\" href=\"%s\" crossorigin>", $font['preconnect'] ?? '//fonts.gstatic.com');
-            $html .= sprintf("<link rel=\"preload\" as=\"css\" href=\"//fonts.googleapis.com/css2?family=%s&display=%s\">", $font_name, $font['display'] ?? 'swap');
-            $html .= sprintf("<link rel=\"stylesheet preload prefetch\" href=\"//fonts.googleapis.com/css?family=%s:%s\">", $font_name, $font['weight'] ?? '400');
-            print($html);
-        }
         return $this;
     }
 
