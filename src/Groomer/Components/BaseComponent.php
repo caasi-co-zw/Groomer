@@ -10,9 +10,24 @@ namespace Groomer\Components;
  */
 class BaseComponent
 {
+    /**
+     * Element id
+     */
     const ID = 'id';
+
+    /**
+     * Element href source
+     */
     const HREF = 'href';
+
+    /**
+     * Element name
+     */
     const NAME = 'name';
+
+    /**
+     * Element source
+     */
     const SRC = 'src';
     const PRINT = "print";
     const DONT_PRINT = "do-no-print";
