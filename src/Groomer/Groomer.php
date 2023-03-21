@@ -470,8 +470,8 @@ class Groomer
     }
 
     /**
-     * Prepends the new seo seoKeywords for the page
-     * @param string|array $schema The seo seoKeywords
+     * Prepends the new seo for the page keywords
+     * @param string|array $schema The seo keywords
      */
     public function addKeywords($seoKeywords)
     {
@@ -484,8 +484,8 @@ class Groomer
     }
 
     /**
-     * Sets the new (overrides any existsing) seo seoKeywords for the page
-     * @param string|array $schema The seo seoKeywords
+     * Sets the new (overrides any existsing) seo keywords for the page
+     * @param string|array $schema The seo keywords
      */
     public function setKeywords($seoKeywords)
     {
@@ -631,17 +631,9 @@ class Groomer
 
     /**
      * Add asyncronous google fonts to your website.
-     * @param array $fonts A list of fonts, each enclosed in an array.
-     */
-    public function setFonts(array ...$fonts)
-    {
-        $this->fonts = array_merge($this->fonts, $fonts);
-        return $this;
-    }
-
-    /**
-     * Add asyncronous google fonts to your website.
-     * @param array $fonts A list of fonts, each enclosed in an array.
+     * @param string $name
+     * @param string $display
+     * @param string $weight
      */
     public function addGoogleFont($name, $display = 'swap', $weight = '400')
     {
