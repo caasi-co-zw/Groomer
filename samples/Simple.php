@@ -20,15 +20,6 @@ class Webpage extends Groomer\Groomer
                 'name' => 'cs'
             ],
         );
-        $this->addScripts(
-            array(
-                'src' => "/js/jquery-3.6.0.min.js",
-                'control_version' => false,
-                'async' => false,
-                'name' => 'jqy',
-                'footer' => false
-            )
-        );
         $this->setVersion(1.01);
         $this->setDomainExtension('test');
         $this->name = $this->getSitename();
