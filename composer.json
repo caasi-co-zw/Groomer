@@ -14,7 +14,7 @@
 			"UnitTests": "tests/"
 		},
 		"psr-4": {
-			"Groomer\\": "src/Groomer/"
+			"Groomer\\": "src/"
 		}
 	},
 	"authors": [

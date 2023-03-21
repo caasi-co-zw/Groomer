@@ -17,9 +17,11 @@ class Webpage extends Groomer\Groomer
         $this->addStyles(
             [
                 'src' => '/samples/assets/style.css',
-                'name' => 'cs'
+                'name' => 'cs',
+                'control_version' => true
             ],
         );
+        $this->addGoogleFont('Poppins');
         $this->setVersion(1.01);
         $this->setDomainExtension('test');
         $this->name = $this->getSitename();
