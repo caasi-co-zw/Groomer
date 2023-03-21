@@ -839,7 +839,7 @@ class Groomer
      * @param string $key 
      * @param string $value
      */
-    public function addHeadTag($key, $value, $seo = false)
+    final public function addHeadTag($key, $value, $seo = false)
     {
         // if key already exists but in a different setting
         // then remove the old setting and make way for the new setting
@@ -864,7 +864,7 @@ class Groomer
      * @param string $value
      * @param bool $seo
      */
-    public function removeHeadTag($key, $seo = false)
+    final public function removeHeadTag($key, $seo = false)
     {
         if (array_key_exists($key, $this->headTagsKeys)) {
             if ($seo) {
