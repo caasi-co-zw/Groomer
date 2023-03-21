@@ -16,7 +16,7 @@ endif;
  * @pageAuthor Isaac Machakata <isaac@caasi.co.zw>
  * @copyright Caasi
  * @link https://github.com/caasi-co-zw/Groomer
- * @version 1.1
+ * @version 1.3.10
  * @license GPL-3.0+ http://www.gnu.org/licenses/gpl-3.0.txt
  */
 class Groomer
@@ -643,9 +643,11 @@ class Groomer
      * Add asyncronous google fonts to your website.
      * @param array $fonts A list of fonts, each enclosed in an array.
      */
-    public function addFonts(array ...$fonts)
+    public function addGoogleFont($name, $display = 'swap', $weight = '400')
     {
-        $this->setFonts($fonts);
+        $this->addHeadTag(sprintf('font-%s-preconect', $name), new Link([Link::REL, 'preconnect'], 'crossorigin', [Link::HREF, '//fonts.gstatic.com']));
+        $this->addHeadTag(sprintf('font-%s-preload', $name), new Link([Link::REL, 'preload'], ['as', 'css'], [Link::HREF, sprintf('//fonts.googleapis.com/css2?family=%s&display=%s', $name, $display)]));
+        $this->addHeadTag(sprintf('font-%s-prefetch', $name), new Link([Link::REL, 'stylesheet preload prefetch'], [Link::HREF, sprintf('//fonts.googleapis.com/css?family=%s:%s', $name, $weight)]));
         return $this;
     }
 

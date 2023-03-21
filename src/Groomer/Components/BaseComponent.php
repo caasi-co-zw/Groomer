@@ -51,8 +51,10 @@ class BaseComponent
             if (is_string($value)) :
                 if ($value == self::DONT_PRINT) :
                     $this->print = false;
+                    continue;
                 elseif ($value == self::PRINT) :
                     $this->print = true;
+                    continue;
                 endif;
                 $strings[] = sprintf(' %s', $value);
             elseif (is_array($value)) :
