@@ -36,7 +36,6 @@ class Webpage extends Groomer {
         $this->setVersion(1.01);
         $this->setDomainExtension('test');
         $this->name = $this->getSitename();
-        $this->addHeadTag('theme-color',new Meta([Meta::NAME,'theme-color'],[Meta::CONTENT,'#fff']));
     }
     public function getHeader() {
         //parent::beforeGetHeader();
