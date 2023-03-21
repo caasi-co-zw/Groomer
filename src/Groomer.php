@@ -858,7 +858,7 @@ class Groomer
         }
 
         // store the key and its value
-        ($seo ? $this->seoHeadTags : $this->otherHeadTags)[$key] = $value;
+        $seo ? $this->seoHeadTags[$key] = $value : $this->otherHeadTags[$key] = $value;
 
         // record key setting
         $this->headTagsKeys[$key] = $seo ? 'seo' : 'global';
@@ -873,9 +873,22 @@ class Groomer
     public function removeHeadTag($key, $seo = false)
     {
         if (array_key_exists($key, $this->headTagsKeys)) {
-            unset(($seo ? $this->seoHeadTags : $this->otherHeadTags)[$key]);
+            if ($seo) {
+                unset($this->seoHeadTags[$key]);
+            } else {
+                unset($this->otherHeadTags[$key]);
+            }
         }
         return $this;
+    }
+
+    /**
+     * Returns a list of all tags values
+     * @return array
+     */
+    public function getTags($seo = false)
+    {
+        return array_values($seo ? $this->seoHeadTags : $this->otherHeadTags);
     }
 
     /**
@@ -959,37 +972,13 @@ class Groomer
 
         <head>
     <?php
-        new Meta([Meta::NAME, 'charset'], [Meta::CONTENT, $this->pageCharset]);
-        new Meta([Meta::HTTP_EQUIV, 'Content-Type'], [Meta::CONTENT, 'text/html']);
-        new Meta([Meta::HTTP_EQUIV, 'X-UA-Compatible'], [Meta::CONTENT, 'IE=edge']);
-        new Meta([Meta::NAME, 'viewport'], [Meta::CONTENT, 'width=device-width, initial-scale=1, shrink-to-fit=no']);
-        new Meta([Meta::NAME, 'application-name'], [Meta::CONTENT, $this->getAppName()]);
-        new Meta([Meta::NAME, 'mobile-web-app-capable'], [Meta::CONTENT, 'yes']);
-        new Meta([Meta::NAME, 'theme-color'], [Meta::CONTENT, $this->getThemeColor()]);
-        new Meta([Meta::NAME, 'format-detection'], [Meta::CONTENT, "telephone=no"]);
-        new Meta([Meta::NAME, 'apple-mobile-web-app-capable'], [Meta::CONTENT, "yes"]);
-        new Meta([Meta::NAME, 'apple-mobile-web-app-status-bar-style'], [Meta::CONTENT, $this->getThemeColor()]);
-        new Meta([Meta::NAME, 'msapplication-TileColor'], [Meta::CONTENT, $this->getThemeColor()]);
-        new Meta([Meta::NAME, 'msapplication-TileImage'], [Meta::CONTENT, $this->getPostImage()]);
-        new Meta([Meta::NAME, 'author'], [Meta::CONTENT, $this->getAuthor()]);
-        $this->isWordPress() ?: new Meta([Meta::NAME, 'generator'], [Meta::CONTENT, $this->systemName]);
-        new Meta([Meta::NAME, 'canonical'], [Meta::HREF, $this->getCurrentPage()]);
+        foreach ($this->getTags() as $tag) {
+            print($tag);
+        }
+        foreach ($this->getTags(true) as $tag) {
+            print($tag);
+        }
         if ($this->seo) :
-            new Meta([Meta::NAME, 'keywords'], [Meta::CONTENT, $this->getKeywords()]);
-            new Meta([Meta::NAME, 'description'], [Meta::CONTENT, $this->getDetails()]);
-            new Meta([Meta::PROPERTY, 'og:url'], [Meta::CONTENT, $this->getCurrentPage()]);
-            new Meta([Meta::PROPERTY, 'og:locale'], [Meta::CONTENT, str_replace("-", "_", $this->pageLanguage)]);
-            new Meta([Meta::PROPERTY, 'og:type'], [Meta::CONTENT, $this->isHomePage() ? 'website' : 'article']);
-            new Meta([Meta::PROPERTY, 'og:title'], [Meta::CONTENT, $this->getTitle()]);
-            new Meta([Meta::PROPERTY, 'og:description'], [Meta::CONTENT, $this->getDetails()]);
-            new Meta([Meta::PROPERTY, 'og:image'], [Meta::CONTENT, $this->getPostImage()]);
-            new Meta([Meta::PROPERTY, 'og:image_alt'], [Meta::CONTENT, $this->thumbnailDescription]);
-            new Meta([Meta::PROPERTY, 'og:site_name'], [Meta::CONTENT, $this->siteName]);
-            new Meta([Meta::PROPERTY, 'twitter:card'], [Meta::CONTENT, $this->twitterCardType]);
-            new Meta([Meta::PROPERTY, 'twitter:title'], [Meta::CONTENT, $this->getTitle()]);
-            new Meta([Meta::PROPERTY, 'twitter:description'], [Meta::CONTENT, $this->getDetails()]);
-            !$this->twitterSite ?: new Meta([Meta::PROPERTY, 'twitter:site'], [Meta::CONTENT, '@' . $this->twitterSite]);
-            new Meta([Meta::PROPERTY, 'twitter:image'], [Meta::CONTENT, $this->getPostImage()]);
         endif;
         !$this->facebookID ?: new Meta([Meta::PROPERTY, 'fb:app_id'], [Meta::CONTENT, $this->facebookID]);
         if ($this->fonts) :
