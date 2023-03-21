@@ -1445,10 +1445,8 @@ class Groomer
         foreach ($tags as $key => $value) {
             $this->addHeadTag($key, $value);
         }
-        if ($this->seo) {
-            foreach ($seo_tags as $key => $value) {
-                $this->addHeadTag($key, $value);
-            }
+        foreach ($seo_tags as $key => $value) {
+            $this->addHeadTag($key, $value, true);
         }
     }
 
