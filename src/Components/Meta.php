@@ -15,8 +15,11 @@ class Meta extends BaseComponent
     const HTTP_EQUIV = 'http-equiv';
     const FACEBOOK_TITLE = 'og:title';
     const FACEBOOK_TYPE = 'og:type';
-    const FACEBOOK_LOCALE = 'og:type';
-    const FACEBOOK_URL = 'og:type';
+    const FACEBOOK_LOCALE = 'og:local';
+    const FACEBOOK_URL = 'og:url';
+    const FACEBOOK_IMAGE = 'og:image';
+    const FACEBOOK_SITENAME = 'og:site_name';
+    const FACEBOOK_IMAGE_ALT = 'og:image_alt';
     const FACEBOOK_DESCRIPTION = 'og:description';
     protected $elementName = 'meta';
     protected $closeTag = false;
