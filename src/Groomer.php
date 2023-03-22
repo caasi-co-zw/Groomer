@@ -1376,7 +1376,7 @@ class Groomer
 
         // set global meta tags
         $tags = [
-            'charset' => new Meta([Meta::NAME, 'charset'], [Meta::CONTENT, $this->pageCharset]),
+            'charset' => new Meta(['charset', strtoupper($this->pageCharset)]),
             'content-type' => new Meta([Meta::HTTP_EQUIV, 'Content-Type'], [Meta::CONTENT, 'text/html']),
             'x-ua-compatible' => new Meta([Meta::HTTP_EQUIV, 'X-UA-Compatible'], [Meta::CONTENT, 'IE=edge']),
             'viewport' => new Meta([Meta::NAME, 'viewport'], [Meta::CONTENT, 'width=device-width, initial-scale=1,shrink-to-fit=no']),
