@@ -47,6 +47,7 @@ class BaseComponent
     {
         $keys = $strings = [];
         foreach ($values as $value) :
+            if (!$value) continue;
             if ($this->skipIf($value)) continue;
             if (is_string($value)) :
                 if ($value == self::DONT_PRINT) :
