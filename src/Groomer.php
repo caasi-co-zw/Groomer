@@ -219,6 +219,12 @@ class Groomer
     protected $manifest;
 
     /**
+     * Manifest file with files to auto cache
+     * @var string
+     */
+    protected $cacheManifest = null;
+
+    /**
      * Localhost top domain level if any
      * @var string
      */
@@ -970,7 +976,7 @@ class Groomer
      * @param string $pageTitle Dynamically change the page title
      * @param callable $cb A callback function to be executed before the function stops
      */
-    final public function getHead(string $pageTitle = null, callable $cb = null)
+    final public function getHead(string $pageTitle = null)
     {
         if ($this->isWordPress()) {
             if (!$this->pageTitle) {
@@ -983,15 +989,14 @@ class Groomer
                 )
             );
         }
-        !$pageTitle ?: $this->pageTitle = $pageTitle;
-        printf('<!DOCTYPE html><html lang="%s" dir="%s"><head>', $this->pageLanguage, $this->pageTextDirection);
+        !$pageTitle ?: $this->setTitle($pageTitle);
+        $documentLanguage = explode('-', $this->pageLanguage)[0];
+        $cacheManifest = !$this->cacheManifest ? null : sprintf(' manifest="%s"', $this->cacheManifest);
+
+        printf('<!DOCTYPE html><html lang="%s" dir="%s"%s><head>', $documentLanguage, $this->pageTextDirection, $cacheManifest);
         print($this->getHeadTags(self::HEAD_TAGS_TYPES['prefetch']));
         !$this->seoEnabled ?: print($this->getHeadTags(self::HEAD_TAGS_TYPES['seo']));
-        print($this->getHeadTags(self::HEAD_TAGS_TYPES['global']));
-        print($this->getHeadTags(self::HEAD_TAGS_TYPES['preload']));
-        print($this->getHeadTags(self::HEAD_TAGS_TYPES['fonts']));
-        print($this->getHeadTags(self::HEAD_TAGS_TYPES['css']));
-        print($this->getHeadTags(self::HEAD_TAGS_TYPES['js']));
+        print($this->getHeadTags(self::HEAD_TAGS_TYPES['global'], self::HEAD_TAGS_TYPES['preload'], self::HEAD_TAGS_TYPES['fonts'], self::HEAD_TAGS_TYPES['css'], self::HEAD_TAGS_TYPES['js']));
         if (!$this->isWordPress()) :
             foreach ($this->getStyles() as $headCss) {
                 $this->printStylesheets($headCss);
