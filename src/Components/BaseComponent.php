@@ -58,8 +58,11 @@ class BaseComponent
                 endif;
                 $strings[] = sprintf(' %s', $value);
             elseif (is_array($value)) :
+
+                // key name is the same as element name
+                // make it the element value
                 if (strtolower($value[0]) == $this->elementName && !$this->value && $this->closeTag) {
-                    $this->value = $value[1];
+                    $this->value .= $value[1];
                     continue;
                 }
                 $keys[] = sprintf(' %s="%s"', $value[0], $value[1]);
