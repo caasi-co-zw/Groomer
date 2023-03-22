@@ -115,12 +115,6 @@ class Groomer
     protected $pageFavicon;
 
     /**
-     * Favicon mime image type
-     * @var string
-     */
-    protected $faviconType;
-
-    /**
      * The SEO pageThumbnail image url
      * @var string
      */
@@ -798,6 +792,10 @@ class Groomer
     {
         return $this->pageFavicon;
     }
+    public function getFaviconType()
+    {
+        return $this->getImageMime($this->getFavicon());
+    }
 
     /**
      * Returns the theme color of the app
@@ -1395,7 +1393,7 @@ class Groomer
         $this->isWordPress() ?: $tags['generator'] = new Meta([Meta::NAME, 'generator'], [Meta::CONTENT, $this->systemName]);
         $tags['canonical'] = new Meta([Meta::NAME, 'canonical'], [Meta::HREF, $this->getCurrentPage()]);
         !$this->manifest ?: $tags['manifest'] = new Link([Link::MANIFEST], [Link::HREF, $this->manifest]);
-        $tags['shortcut-icon'] = new Link([Link::REL, 'shortcut icon'], [Link::TYPE, $this->faviconType], [Link::HREF, $this->getFavicon()]);
+        !$this->getFavicon() ?: $tags['shortcut-icon'] = new Link([Link::REL, 'shortcut icon'], [Link::TYPE, $this->getFaviconType()], [Link::HREF, $this->getFavicon()]);
 
         // add default seo tags
         $seo_tags = [
@@ -1428,5 +1426,10 @@ class Groomer
     private function isHomePage()
     {
         return ($this->getCurrentPage() == $this->getWebsiteHome() . '/');
+    }
+    private function getImageMime($img)
+    {
+        $mime = getimagesize($img);
+        return $mime['mime'];
     }
 };
