@@ -4,6 +4,7 @@ namespace Groomer;
 
 use Groomer\Components\Link;
 use Groomer\Components\Meta;
+use Groomer\Components\NoScript;
 
 if (!defined('MANAGE_SESSION') || MANAGE_SESSION === true) :
     session_start();
@@ -27,6 +28,7 @@ class Groomer
      * * global
      * * fonts
      * * prefetch
+     * * preload
      * * css
      * * js
      */
@@ -130,7 +132,7 @@ class Groomer
      * A list of all stylesheetsURI stylesheets and their properties
      * @var array
      */
-    protected $stylesheetsURI = [];
+    private $stylesheetsURI = [];
 
     /**
      * Text direction of the site
@@ -587,11 +589,36 @@ class Groomer
      * Adds a stylesheet to queque
      * @param array $sheets A list of the css sheet
      */
-    public function addStyle(array ...$sheets)
+    public function addStyle(array $stylesheet)
     {
-        $this->stylesheetsURI = array_merge($this->stylesheetsURI, $sheets);
+        $source = $stylesheet['src'] ?? $stylesheet['href'];
+        $name = $stylesheet['name'] ?? $source;
+        $async = (isset($stylesheet['async']) && $stylesheet['async']);
+        $version = (!isset($stylesheet['control_version']) || !$stylesheet['control_version']) ?: '?ver=' . ($stylesheet['version'] ?? $this->version);
+        $link = new Link(
+            [Link::REL, Link::STYLESHEET],
+            !$async ? null : [Link::TYPE, Link::CSS],
+            [Link::HREF, $source . $version],
+            !$async ? null : Link::PRELOAD_CSS,
+        );
+
+        // if async mentioned add a preload
+        // prefix z is to make them appear last
+        if ($async) {
+            $this->addHeadTag(sprintf('zcss-preload-for-%s', $name), $link, self::HEAD_TAGS_TYPES['preload']);
+            $link = new NoScript(['noscript', new Link(
+                [Link::REL, Link::STYLESHEET],
+                [Link::HREF, $source . $version],
+            )]);
+        }
+        $this->addHeadTag(
+            sprintf('z-css-for-%s', $name),
+            $link,
+            self::HEAD_TAGS_TYPES['css']
+        );
         return $this;
     }
+
     /**
      * Adds a stylesheet to queque
      * @param array $sheets A list of the css sheet
@@ -599,7 +626,10 @@ class Groomer
     public function addStyles(...$sheets)
     {
         if (is_array($sheets)) {
-            $this->stylesheetsURI = array_merge($this->stylesheetsURI, $sheets);
+            // $this->stylesheetsURI = array_merge($this->stylesheetsURI, $sheets);
+            foreach ($sheets as $sheet) {
+                $this->addStyle($sheet);
+            }
         }
         return $this;
     }
