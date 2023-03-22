@@ -22,6 +22,25 @@ endif;
 class Groomer
 {
     /**
+     * A list of pre-defined head tags types which are
+     * * seo
+     * * global
+     * * fonts
+     * * prefetch
+     * * css
+     * * js
+     */
+    const HEAD_TAGS_TYPES = [
+        'seo' => 'seo',
+        'global' => 'global',
+        'fonts' => 'fonts',
+        'prefetch' => 'prefetch',
+        'preload' => 'preload',
+        'css' => 'css',
+        'js' => 'js',
+    ];
+
+    /**
      * The system name
      * @var string
      */
@@ -56,17 +75,10 @@ class Groomer
      */
     private $pageRouteRegexPresets = [];
 
-    private $requiredFonts = [];
-
-    /**
-     * These are printed only when SEO is enabled.
-     */
-    private $seoHeadTags = [];
-
     /**
      * These are printed even when SEO is disabled and may include css stylsheets urls
      */
-    private $otherHeadTags = [];
+    private $headTags = [];
 
     /**
      * Used to prevent duplicates head keys
@@ -637,9 +649,9 @@ class Groomer
      */
     public function addGoogleFont($name, $display = 'swap', $weight = '400')
     {
-        $this->addHeadTag(sprintf('font-%s-preconect', $name), new Link([Link::REL, 'preconnect'], 'crossorigin', [Link::HREF, '//fonts.gstatic.com']));
-        $this->addHeadTag(sprintf('font-%s-preload', $name), new Link([Link::REL, 'preload'], ['as', 'css'], [Link::HREF, sprintf('//fonts.googleapis.com/css2?family=%s&display=%s', $name, $display)]));
-        $this->addHeadTag(sprintf('font-%s-prefetch', $name), new Link([Link::REL, 'stylesheet preload prefetch'], [Link::HREF, sprintf('//fonts.googleapis.com/css?family=%s:%s', $name, $weight)]));
+        $this->addHeadTag('gstatic-preconect', new Link([Link::REL, 'preconnect'], 'crossorigin', [Link::HREF, '//fonts.gstatic.com']), self::HEAD_TAGS_TYPES['prefetch']);
+        $this->addHeadTag(sprintf('font-%s-preload', $name), new Link([Link::REL, 'preload'], ['as', 'css'], [Link::HREF, sprintf('//fonts.googleapis.com/css2?family=%s&display=%s', $name, $display)]), self::HEAD_TAGS_TYPES['fonts']);
+        $this->addHeadTag(sprintf('font-%s-prefetch', $name), new Link([Link::REL, 'stylesheet preload prefetch'], [Link::HREF, sprintf('//fonts.googleapis.com/css?family=%s:%s', $name, $weight)]), self::HEAD_TAGS_TYPES['global']);
         return $this;
     }
 
@@ -838,40 +850,50 @@ class Groomer
     /**
      * @param string $key 
      * @param string $value
+     * @param string $source
      */
-    final public function addHeadTag($key, $value, $seo = false)
+    final public function addHeadTag($key, $value, $source = null)
     {
+        // set default source if not mentioned
+        $source = $source ?? self::HEAD_TAGS_TYPES['global'];
+
         // if key already exists but in a different setting
         // then remove the old setting and make way for the new setting
         // eg. if name exists for seo only but the current user trying to
         // set it globally, remove for seo and set it globally
         if (array_key_exists($key, $this->headTagsKeys)) {
-            if (($seo && $this->headTagsKeys[$key] != 'seo') || (!$seo && $this->headTagsKeys[$key] != 'global')) {
-                $this->removeHeadTag($key, !$seo);
-            }
+            $this->removeHeadTag($key, $source);
         }
 
         // store the key and its value
-        $seo ? $this->seoHeadTags[$key] = $value : $this->otherHeadTags[$key] = $value;
+        $this->headTags[$source][$key] = $value;
 
         // record key setting
-        $this->headTagsKeys[$key] = $seo ? 'seo' : 'global';
+        $this->headTagsKeys[$key] = $source;
         return $this;
+    }
+
+    /**
+     * Returns string of tags for the specified source
+     * @param string $source
+     * @return string
+     */
+    final public function getHeadTags($source = null)
+    {
+        $source = $source ?? self::HEAD_TAGS_TYPES['global'];
+        return implode($this->getTags($source));
     }
 
     /**
      * @param string $key 
      * @param string $value
-     * @param bool $seo
+     * @param string $seo
      */
-    final public function removeHeadTag($key, $seo = false)
+    final public function removeHeadTag($key, $source = null)
     {
+        $source = $source ?? self::HEAD_TAGS_TYPES['global'];
         if (array_key_exists($key, $this->headTagsKeys)) {
-            if ($seo) {
-                unset($this->seoHeadTags[$key]);
-            } else {
-                unset($this->otherHeadTags[$key]);
-            }
+            unset($this->headTags[$source][$key]);
         }
         return $this;
     }
@@ -880,9 +902,10 @@ class Groomer
      * Returns a list of all tags values
      * @return array
      */
-    public function getTags($seo = false)
+    public function getTags($source = null)
     {
-        return array_values($seo ? $this->seoHeadTags : $this->otherHeadTags);
+        $source = $source ?? self::HEAD_TAGS_TYPES['global'];
+        return array_values($this->headTags[$source]);
     }
 
     /**
@@ -958,18 +981,12 @@ class Groomer
                 )
             );
         }
-        if ($pageTitle) {
-            $this->pageTitle = $pageTitle;
-        }
+        !$pageTitle ?: $this->pageTitle = $pageTitle;
         printf('<!DOCTYPE html><html lang="%s" dir="%s"><head>', $this->pageLanguage, $this->pageTextDirection);
-        if ($this->seoEnabled) :
-            foreach ($this->getTags(true) as $tag) {
-                print($tag);
-            }
-        endif;
-        foreach ($this->getTags() as $tag) {
-            print($tag);
-        }
+        print($this->getHeadTags(self::HEAD_TAGS_TYPES['prefetch']));
+        !$this->seoEnabled ?: print($this->getHeadTags(self::HEAD_TAGS_TYPES['seo']));
+        print($this->getHeadTags(self::HEAD_TAGS_TYPES['global']));
+        print($this->getHeadTags(self::HEAD_TAGS_TYPES['fonts']));
         if (!$this->isWordPress()) :
             foreach ($this->getStyles() as $headCss) {
                 $this->printStylesheets($headCss);
@@ -1397,7 +1414,7 @@ class Groomer
             $this->addHeadTag($key, $value);
         }
         foreach ($seo_tags as $key => $value) {
-            $this->addHeadTag($key, $value, true);
+            $this->addHeadTag($key, $value, 'seo');
         }
     }
 
