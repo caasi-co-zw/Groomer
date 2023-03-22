@@ -17,6 +17,9 @@ class Link extends BaseComponent
     const HREF = 'href';
     const CONTENT = 'content';
     const MANIFEST = 'rel="manifest"';
+    const STYLESHEET = 'stylesheet';
+    const PRELOAD_CSS = 'rel="preload" onload="this.onload=null;this.rel=\'stylesheet\'"';
+    const CSS = 'text/css';
     protected $elementName = 'link';
     protected $closeTag = false;
 }
