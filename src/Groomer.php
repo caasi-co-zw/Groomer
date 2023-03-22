@@ -650,7 +650,7 @@ class Groomer
     public function addGoogleFont($name, $display = 'swap', $weight = '400')
     {
         $this->addHeadTag('gstatic-preconect', new Link([Link::REL, 'preconnect'], 'crossorigin', [Link::HREF, '//fonts.gstatic.com']), self::HEAD_TAGS_TYPES['prefetch']);
-        $this->addHeadTag(sprintf('font-%s-preload', $name), new Link([Link::REL, 'preload'], ['as', 'css'], [Link::HREF, sprintf('//fonts.googleapis.com/css2?family=%s&display=%s', $name, $display)]), self::HEAD_TAGS_TYPES['fonts']);
+        $this->addHeadTag(sprintf('font-%s-preload', $name), new Link([Link::REL, 'preload'], ['as', 'css'], [Link::HREF, sprintf('//fonts.googleapis.com/css2?family=%s&display=%s', $name, $display)]), self::HEAD_TAGS_TYPES['preload']);
         $this->addHeadTag(sprintf('font-%s-prefetch', $name), new Link([Link::REL, 'stylesheet preload prefetch'], [Link::HREF, sprintf('//fonts.googleapis.com/css?family=%s:%s', $name, $weight)]), self::HEAD_TAGS_TYPES['global']);
         return $this;
     }
@@ -875,13 +875,17 @@ class Groomer
 
     /**
      * Returns string of tags for the specified source
-     * @param string $source
+     * @param string|array $source
      * @return string
      */
-    final public function getHeadTags($source = null)
+    final public function getHeadTags(...$source)
     {
-        $source = $source ?? self::HEAD_TAGS_TYPES['global'];
-        return implode($this->getTags($source));
+        $tags = '';
+        $source = $source ?? [self::HEAD_TAGS_TYPES['global']];
+        foreach ($source as $tag) {
+            $tags .= implode($this->getTags($tag));
+        }
+        return $tags;
     }
 
     /**
@@ -905,7 +909,7 @@ class Groomer
     public function getTags($source = null)
     {
         $source = $source ?? self::HEAD_TAGS_TYPES['global'];
-        return array_values($this->headTags[$source]);
+        return isset($this->headTags[$source]) ? array_values($this->headTags[$source]) : [];
     }
 
     /**
@@ -986,7 +990,10 @@ class Groomer
         print($this->getHeadTags(self::HEAD_TAGS_TYPES['prefetch']));
         !$this->seoEnabled ?: print($this->getHeadTags(self::HEAD_TAGS_TYPES['seo']));
         print($this->getHeadTags(self::HEAD_TAGS_TYPES['global']));
+        print($this->getHeadTags(self::HEAD_TAGS_TYPES['preload']));
         print($this->getHeadTags(self::HEAD_TAGS_TYPES['fonts']));
+        print($this->getHeadTags(self::HEAD_TAGS_TYPES['css']));
+        print($this->getHeadTags(self::HEAD_TAGS_TYPES['js']));
         if (!$this->isWordPress()) :
             foreach ($this->getStyles() as $headCss) {
                 $this->printStylesheets($headCss);
