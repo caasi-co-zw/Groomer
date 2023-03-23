@@ -868,6 +868,14 @@ class Groomer
     public function setSitename($sitename)
     {
         $this->siteName = $sitename;
+        $this->addHeadTag(
+            'og:site_name',
+            new Meta(
+                [Meta::PROPERTY, 'og:site_name'],
+                [Meta::CONTENT, $this->siteName]
+            ),
+            self::HEAD_TAGS_TYPES['seo']
+        );
         return $this;
     }
     /**
