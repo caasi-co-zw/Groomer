@@ -232,7 +232,6 @@ class Groomer
      * @var string
      */
     protected $localTLD = 'localhost';
-    protected $menu;
     protected $postImage;
     protected $errors;
 
@@ -275,7 +274,6 @@ class Groomer
      * @var object
      */
     public $theme;
-    protected $metaCallbacks = array();
 
     /**
      * Name of the website
@@ -390,10 +388,6 @@ class Groomer
                     break;
                 case 'favicon':
                     $this->pageFavicon = $value;
-                    break;
-
-                case 'menu':
-                    $this->menu = $value;
                     break;
                 case 'css':
                     $this->headCss = $value;
