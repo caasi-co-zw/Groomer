@@ -3,7 +3,7 @@ include __DIR__ . "/samples/Simple.php";
 
 $web = new Webpage();
 $web
-    ->setTitle('Groomer Site')
+    ->setTitle('Home')
     ->setDescription('Create your website easily.')
     ->getHead()
     ->getMenu()

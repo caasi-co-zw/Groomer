@@ -12,8 +12,8 @@ class Webpage extends Groomer\Groomer
     public function __construct()
     {
         parent::__construct();
-        $this->setSeo(false);
-        $this->setSitename('Demo');
+        $this->setSeo(true);
+        $this->setSitename('Groomer Demo');
         $this->addStyles(
             [
                 'src' => '/samples/assets/style.css',
