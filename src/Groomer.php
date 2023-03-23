@@ -91,7 +91,7 @@ class Groomer
      * The page title
      * @var string
      */
-    protected $pageTitle;
+    private $pageTitle;
 
     /**
      * SEO Keywords for page
@@ -441,6 +441,19 @@ class Groomer
     public function setTitle(string $pageTitle)
     {
         $this->pageTitle = $pageTitle;
+
+        // fix: opengraph & twitter titles as they were being left
+        // with a separator only
+        $this->addHeadTag(
+            'og:title',
+            new Meta([Meta::PROPERTY, 'og:title'], [Meta::CONTENT, $this->getTitle()]),
+            self::HEAD_TAGS_TYPES['seo']
+        );
+        $this->addHeadTag(
+            'twitter:title',
+            new Meta([Meta::PROPERTY, 'twitter:title'], [Meta::CONTENT, $this->getTitle()]),
+            self::HEAD_TAGS_TYPES['seo']
+        );
         return $this;
     }
 
@@ -1459,7 +1472,7 @@ class Groomer
             $this->addHeadTag($key, $value);
         }
         foreach ($seo_tags as $key => $value) {
-            $this->addHeadTag($key, $value, 'seo');
+            $this->addHeadTag($key, $value, self::HEAD_TAGS_TYPES['seo']);
         }
     }
 
