@@ -566,6 +566,30 @@ class Groomer
     public function setDescription(string $excerpt)
     {
         $this->seoDescritpion = $excerpt;
+        $this->addHeadTag(
+            'description',
+            new Meta(
+                [Meta::NAME, 'description'],
+                [Meta::CONTENT, $this->getDetails()]
+            ),
+            self::HEAD_TAGS_TYPES['seo']
+        );
+        $this->addHeadTag(
+            'og:description',
+            new Meta(
+                [Meta::PROPERTY, 'og:description'],
+                [Meta::CONTENT, $this->getDetails()]
+            ),
+            self::HEAD_TAGS_TYPES['seo']
+        );
+        $this->addHeadTag(
+            'twitter:description',
+            new Meta(
+                [Meta::PROPERTY, 'twitter:description'],
+                [Meta::CONTENT, $this->getDetails()]
+            ),
+            self::HEAD_TAGS_TYPES['seo']
+        );
         return $this;
     }
 
