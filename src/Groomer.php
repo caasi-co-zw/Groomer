@@ -441,19 +441,6 @@ class Groomer
     public function setTitle(string $pageTitle)
     {
         $this->pageTitle = $pageTitle;
-
-        // fix: opengraph & twitter titles as they were being left
-        // with a separator only
-        $this->addHeadTag(
-            'og:title',
-            new Meta([Meta::PROPERTY, 'og:title'], [Meta::CONTENT, $this->getTitle()]),
-            self::HEAD_TAGS_TYPES['seo']
-        );
-        $this->addHeadTag(
-            'twitter:title',
-            new Meta([Meta::PROPERTY, 'twitter:title'], [Meta::CONTENT, $this->getTitle()]),
-            self::HEAD_TAGS_TYPES['seo']
-        );
         return $this;
     }
 
@@ -566,30 +553,6 @@ class Groomer
     public function setDescription(string $excerpt)
     {
         $this->seoDescritpion = $excerpt;
-        $this->addHeadTag(
-            'description',
-            new Meta(
-                [Meta::NAME, 'description'],
-                [Meta::CONTENT, $this->getDetails()]
-            ),
-            self::HEAD_TAGS_TYPES['seo']
-        );
-        $this->addHeadTag(
-            'og:description',
-            new Meta(
-                [Meta::PROPERTY, 'og:description'],
-                [Meta::CONTENT, $this->getDetails()]
-            ),
-            self::HEAD_TAGS_TYPES['seo']
-        );
-        $this->addHeadTag(
-            'twitter:description',
-            new Meta(
-                [Meta::PROPERTY, 'twitter:description'],
-                [Meta::CONTENT, $this->getDetails()]
-            ),
-            self::HEAD_TAGS_TYPES['seo']
-        );
         return $this;
     }
 
@@ -892,14 +855,6 @@ class Groomer
     public function setSitename($sitename)
     {
         $this->siteName = $sitename;
-        $this->addHeadTag(
-            'og:site_name',
-            new Meta(
-                [Meta::PROPERTY, 'og:site_name'],
-                [Meta::CONTENT, $this->siteName]
-            ),
-            self::HEAD_TAGS_TYPES['seo']
-        );
         return $this;
     }
     /**
@@ -1072,6 +1027,7 @@ class Groomer
         !$pageTitle ?: $this->setTitle($pageTitle);
         $documentLanguage = explode('-', $this->pageLanguage)[0];
         $cacheManifest = !$this->cacheManifest ? null : sprintf(' manifest="%s"', $this->cacheManifest);
+        $this->setupMetaTags();
 
         printf('<!DOCTYPE html><html lang="%s" dir="%s"%s><head>', $documentLanguage, $this->pageTextDirection, $cacheManifest);
         print($this->getHeadTags(self::HEAD_TAGS_TYPES['prefetch']));
@@ -1458,7 +1414,10 @@ class Groomer
         $this->systemName = 'Caasi Groomer';
         $this->developerName = $this->pageAuthor = 'Caasi';
         $this->developerURL = 'https://caasi.co.zw/';
+    }
 
+    private function setupMetaTags()
+    {
         // set global meta tags
         $tags = [
             'charset' => new Meta(['charset', strtoupper($this->pageCharset)]),
@@ -1507,7 +1466,6 @@ class Groomer
             $this->addHeadTag($key, $value, self::HEAD_TAGS_TYPES['seo']);
         }
     }
-
     private function isHomePage()
     {
         return ($this->getCurrentPage() == $this->getWebsiteHome() . '/');
