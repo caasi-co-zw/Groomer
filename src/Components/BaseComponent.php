@@ -32,8 +32,8 @@ class BaseComponent
     const PRINT = "print";
     const DONT_PRINT = "do-no-print";
     protected $results = '';
-    protected $value = null;
-    protected $elementName = 'script';
+    protected $elementName = null;
+    private $value = null;
     /**
      * Adds a matching closing tag when enabled
      */
@@ -45,9 +45,15 @@ class BaseComponent
      */
     public function __construct(...$values)
     {
+        // get class name
+        $className = explode("\\", get_class($this));
+        $this->elementName = strtolower(end($className));
+
+        // prepare parameters
         $keys = $strings = [];
         foreach ($values as $value) :
             if (!$value) continue;
+            if (is_array($value) && count($value) === 1) $value = $value[0];
             if ($this->skipIf($value)) continue;
             if (is_string($value)) :
                 if ($value == self::DONT_PRINT) :
@@ -82,7 +88,7 @@ class BaseComponent
     public function __toString()
     {
         if ($this->closeTag) {
-            return sprintf('<%s%s>%s</%1$s>', $this->elementName, !$this->results ?null: ' ' . trim($this->results), $this->value);
+            return sprintf('<%s%s>%s</%1$s>', $this->elementName, !$this->results ? null : ' ' . trim($this->results), $this->value);
         }
         return sprintf('<%s %s/>', $this->elementName, trim($this->results));
     }

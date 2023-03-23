@@ -12,5 +12,4 @@ class Style extends BaseComponent
 {
     const TYPE = 'type';
     const TYPE_CSS = 'type="text/css"';
-    protected $elementName = 'style';
 }

@@ -21,6 +21,5 @@ class Meta extends BaseComponent
     const FACEBOOK_SITENAME = 'og:site_name';
     const FACEBOOK_IMAGE_ALT = 'og:image_alt';
     const FACEBOOK_DESCRIPTION = 'og:description';
-    protected $elementName = 'meta';
     protected $closeTag = false;
 }

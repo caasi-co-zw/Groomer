@@ -13,5 +13,4 @@ class Script extends BaseComponent
     const TYPE = 'type';
     const TYPE_MODULE = 'type="module"';
     const TYPE_JAVASCRIPT = 'type="text/javascript"';
-    private $elementName = 'script';
 }

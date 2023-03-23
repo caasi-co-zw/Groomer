@@ -10,6 +10,5 @@ namespace Groomer\Components;
  */
 class NoScript extends BaseComponent
 {
-    protected $elementName = 'noscript';
     protected $closeTag = true;
 }
