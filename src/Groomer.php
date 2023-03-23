@@ -1466,7 +1466,10 @@ class Groomer
     }
     private function getImageMime($img)
     {
-        $mime = getimagesize($img);
-        return $mime['mime'];
+        
+        $ext = explode('.', $img);
+        $ext = end($ext);
+        $type = 'image';
+        return sprintf('%s/%s',$type, $ext);
     }
 };
