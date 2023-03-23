@@ -5,6 +5,7 @@ namespace Groomer;
 use Groomer\Components\Link;
 use Groomer\Components\Meta;
 use Groomer\Components\NoScript;
+use Groomer\Components\Style;
 
 if (!defined('MANAGE_SESSION') || MANAGE_SESSION === true) :
     session_start();
@@ -645,6 +646,10 @@ class Groomer
         } else {
             $this->headCss .= $headCss;
         }
+        $this->addHeadTag('zstyle', new Style(
+            ['style', $this->headCss],
+            Style::TYPE_CSS
+        ), self::HEAD_TAGS_TYPES['css']);
         return $this;
     }
 
