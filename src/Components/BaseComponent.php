@@ -31,14 +31,14 @@ class BaseComponent
     const SRC = 'src';
     const PRINT = "print";
     const DONT_PRINT = "do-no-print";
-    protected $results = '';
-    protected $elementName = null;
-    private $value = null;
     /**
      * Adds a matching closing tag when enabled
      */
     protected $closeTag = true;
     private $print = false;
+    private $results = '';
+    private $elementName = null;
+    private $value = null;
 
     /**
      * Pass in a list of keys and their values.
