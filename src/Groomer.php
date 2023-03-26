@@ -73,12 +73,6 @@ class Groomer
     private $compressHtmlOutput = true;
 
     /**
-     * Custom route regex presets
-     * @var array
-     */
-    private $pageRouteRegexPresets = [];
-
-    /**
      * These are printed even when SEO is disabled and may include css stylsheets urls
      */
     private $headTags = [];
@@ -1395,13 +1389,6 @@ class Groomer
                 '><',
                 ' ',
             ),
-        );
-
-        $this->pageRouteRegexPresets = array(
-            '{all}' => '.*',
-            '{alpha}' => '([a-zA-Z])+',
-            '{any}' => '[^/]+',
-            '{num}' => '\d+|-\d+',
         );
 
         $this->thumbnailDescription = 'Our logo';
