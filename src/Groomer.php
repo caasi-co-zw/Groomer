@@ -320,46 +320,21 @@ class Groomer
         foreach ($config as $key => $value) {
             switch ($key) {
                 case 'title':
-                    $this->pageTitle = $value;
+                    $this->setTitle($value);
                     break;
                 case 'author':
-                    $this->pageAuthor = ucwords($value);
+                    $this->setAuthor($value);
                     break;
                 case 'description':
-                    $this->seoDescritpion = $value;
+                    $this->setDescription($value);
                     break;
                 case 'keywords':
-                    if (is_array($value)) {
-                        $this->seoKeywords = '';
-                        for ($j = 0; $j < count($value); $j++) {
-                            $this->seoKeywords .= ($value[$j]);
-                            if ($j + 1 !== count($value)) {
-                                $this->seoKeywords .= ',';
-                            }
-                        }
-                    } else {
-                        $this->seoKeywords = ($value);
-                    }
+                    $this->addKeywords($value);
                     break;
                 case 'fonts':
-                    if (is_array($value)) {
-                        for ($j = 0; $j < count($value); $j++) {
-                            $this->fonts[] = $value[$j];
-                        }
-                    } else {
-                        $this->fonts[] = $value;
-                    }
                     break;
                 case 'styles':
-                    if ($value) {
-                        if (is_array($value)) {
-                            for ($j = 0; $j < count($value); $j++) {
-                                $this->stylesheetsURI[] = $value[$j];
-                            }
-                        } else {
-                            $this->stylesheetsURI = array_merge(array($value), $this->stylesheetsURI);
-                        }
-                    }
+                    $this->addStyles(...$value);
                     break;
                 case 'js':
                 case 'footer_js':
@@ -381,16 +356,16 @@ class Groomer
                     }
                     break;
                 case 'favicon':
-                    $this->pageFavicon = $value;
+                    $this->setFavicon($value);
                     break;
                 case 'css':
-                    $this->headCss = $value;
+                    $this->addStyles($value);
                     break;
                 case 'robots':
                     $this->robots = $value;
                     break;
                 case 'image':
-                    $this->postImage = $value;
+                    $this->setPostImage($value);
                     break;
                 default:
                     # log to errors
@@ -1453,10 +1428,10 @@ class Groomer
     }
     private function getImageMime($img)
     {
-        
+
         $ext = explode('.', $img);
         $ext = end($ext);
         $type = 'image';
-        return sprintf('%s/%s',$type, $ext);
+        return sprintf('%s/%s', $type, $ext);
     }
 };
