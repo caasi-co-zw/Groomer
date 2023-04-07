@@ -52,9 +52,17 @@ class BaseComponent
         // prepare parameters
         $keys = $strings = [];
         foreach ($values as $value) :
+
+            // do not process if value if empty
             if (!$value) continue;
+
+            // if second value empty while array, 
+            // convert the value to a string
             if (is_array($value) && count($value) === 1) $value = $value[0];
+
+            // if custom functionality returns true, do not proceed
             if ($this->skipIf($value)) continue;
+
             if (is_string($value)) :
                 if ($value == self::DONT_PRINT) :
                     $this->print = false;
@@ -75,6 +83,7 @@ class BaseComponent
                 $keys[] = sprintf(' %s="%s"', $value[0], $value[1]);
             endif;
         endforeach;
+        
         sort($strings);
         $this->results = implode(' ', $keys) . implode(' ', $strings);
         if ($this->print) {
