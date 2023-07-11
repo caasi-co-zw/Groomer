@@ -10,9 +10,6 @@
 		"web-builder"
 	],
 	"autoload": {
-		"psr-0": {
-			"UnitTests": "tests/"
-		},
 		"psr-4": {
 			"Groomer\\": "src/"
 		}
