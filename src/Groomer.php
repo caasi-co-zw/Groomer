@@ -375,7 +375,9 @@ class Groomer
         }
 
         // send a system header
-        header(sprintf("X-Powered-By: %s", $this->systemName));
+        if (!headers_sent()) {
+            header(sprintf("X-Powered-By: %s", $this->systemName));
+        }
 
         // compress html if enabled
         if ($this->compressHtmlOutput) :
