@@ -1394,7 +1394,7 @@ class Groomer
         ];
         $this->isWordPress() ?: $tags['generator'] = new Meta([Meta::NAME, 'generator'], [Meta::CONTENT, $this->systemName]);
         $tags['canonical'] = new Meta([Meta::NAME, 'canonical'], [Meta::HREF, $this->getCurrentPage()]);
-        !$this->manifest ?: $tags['manifest'] = new Link([Link::MANIFEST], [Link::HREF, $this->manifest]);
+        !$this->manifest ?: $tags['manifest'] = new Link([Link::MANIFEST], [Link::HREF, $this->manifest],[Link::CROSSORIGIN, "use-credentials"]);
         !$this->getFavicon() ?: $tags['shortcut-icon'] = new Link([Link::REL, 'shortcut icon'], [Link::TYPE, $this->getFaviconType()], [Link::HREF, $this->getFavicon()]);
 
         // add default seo tags
