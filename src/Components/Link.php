@@ -16,6 +16,7 @@ class Link extends BaseComponent
     const NAME = 'name';
     const HREF = 'href';
     const CONTENT = 'content';
+    const CROSSORIGIN = 'crossorigin';
     const MANIFEST = 'rel="manifest"';
     const STYLESHEET = 'stylesheet';
     const PRELOAD_CSS = 'rel="preload" onload="this.onload=null;this.rel=\'stylesheet\'"';
